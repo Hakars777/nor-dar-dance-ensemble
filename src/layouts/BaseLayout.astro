@@ -1,0 +1,60 @@
+---
+import { getEntry } from "astro:content";
+import Header from "@components/Header.astro";
+import Footer from "@components/Footer.astro";
+import "@styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  type?: "website" | "article";
+}
+
+const settingsEntry = await getEntry("settings", "site");
+const settings = settingsEntry?.data;
+
+const {
+  title,
+  description = settings?.seoDescription ?? "Nor-Dar Dance Ensemble - армянский танцевальный ансамбль.",
+  image = "/uploads/brand/og-nor-dar.svg",
+  type = "website"
+} = Astro.props;
+
+const siteTitle = settings?.siteTitle ?? "Nor-Dar Dance Ensemble";
+const pageTitle = title ? `${title} | ${siteTitle}` : settings?.seoTitle ?? siteTitle;
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site).toString();
+const ogImageUrl = new URL(image, Astro.site).toString();
+---
+
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content={siteTitle} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+    <meta name="theme-color" content="#5b0d1a" />
+    <link rel="icon" type="image/svg+xml" href="/uploads/brand/favicon.svg" />
+    <slot name="head" />
+  </head>
+  <body>
+    <Header settings={settings} />
+    <main>
+      <slot />
+    </main>
+    <Footer settings={settings} />
+  </body>
+</html>

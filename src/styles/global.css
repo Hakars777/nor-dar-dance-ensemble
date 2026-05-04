@@ -1,0 +1,141 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+  --selection-bg: #5b0d1a;
+  --selection-text: #fffdf8;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background:
+    radial-gradient(circle at top left, rgba(199, 154, 45, 0.11), transparent 30rem),
+    linear-gradient(180deg, #fffdf8 0%, #fbf7ef 48%, #fffdf8 100%);
+  color: #141011;
+  font-family: "Inter", "Segoe UI", Arial, sans-serif;
+  line-height: 1.6;
+}
+
+::selection {
+  background: var(--selection-bg);
+  color: var(--selection-text);
+}
+
+img,
+svg,
+video,
+canvas {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+.font-display {
+  letter-spacing: 0;
+}
+
+.container-page {
+  width: min(1160px, calc(100% - 32px));
+  margin-inline: auto;
+}
+
+.ornament-line {
+  position: relative;
+}
+
+.ornament-line::after {
+  content: "";
+  display: block;
+  width: min(170px, 44vw);
+  height: 1px;
+  margin-top: 18px;
+  background: linear-gradient(90deg, transparent, #c79a2d, transparent);
+}
+
+.ornament-line.center::after {
+  margin-inline: auto;
+}
+
+.ornament-tile {
+  background-image:
+    linear-gradient(45deg, rgba(199, 154, 45, 0.18) 25%, transparent 25%),
+    linear-gradient(-45deg, rgba(91, 13, 26, 0.13) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, rgba(199, 154, 45, 0.14) 75%),
+    linear-gradient(-45deg, transparent 75%, rgba(91, 13, 26, 0.1) 75%);
+  background-position:
+    0 0,
+    0 12px,
+    12px -12px,
+    -12px 0;
+  background-size: 24px 24px;
+}
+
+.surface {
+  border: 1px solid rgba(91, 13, 26, 0.1);
+  background: rgba(255, 253, 248, 0.86);
+  box-shadow: 0 14px 45px rgba(20, 16, 17, 0.08);
+  backdrop-filter: blur(14px);
+}
+
+.prose-content {
+  color: rgba(20, 16, 17, 0.82);
+  font-size: 1.0625rem;
+}
+
+.prose-content p {
+  margin: 0 0 1.1rem;
+}
+
+.prose-content h2,
+.prose-content h3 {
+  margin: 2rem 0 0.8rem;
+  color: #220409;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  line-height: 1.1;
+}
+
+.prose-content h2 {
+  font-size: clamp(2rem, 4vw, 3rem);
+}
+
+.prose-content h3 {
+  font-size: clamp(1.5rem, 3vw, 2.1rem);
+}
+
+.focus-ring:focus-visible {
+  outline: 3px solid rgba(199, 154, 45, 0.75);
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

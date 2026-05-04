@@ -1,0 +1,23 @@
+---
+export const prerender = true;
+---
+
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <title>Nor-Dar Admin</title>
+  </head>
+  <body>
+    <script src="/admin/decap-cms.js" is:inline></script>
+    <script is:inline>
+      if (!window.CMS) {
+        var fallback = document.createElement("script");
+        fallback.src = "https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js";
+        document.body.appendChild(fallback);
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="760" viewBox="0 0 1000 760">
+  <defs><linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#3a0710"/><stop offset=".55" stop-color="#9f2336"/><stop offset="1" stop-color="#141011"/></linearGradient></defs>
+  <rect width="1000" height="760" fill="url(#g)"/>
+  <circle cx="745" cy="215" r="170" fill="#e6c15f" opacity=".18"/>
+  <path d="M0 584c180-75 328-75 508 0 160 67 296 68 492-10v186H0z" fill="#141011" opacity=".55"/>
+  <text x="64" y="116" font-family="Arial, sans-serif" font-size="18" letter-spacing="5" fill="#fff5d6">FESTIVAL</text>
+  <text x="64" y="610" font-family="Georgia, serif" font-size="58" fill="#fffdf8">Фестивальный номер</text>
+</svg>

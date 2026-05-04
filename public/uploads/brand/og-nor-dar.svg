@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop stop-color="#220409"/>
+      <stop offset=".52" stop-color="#5b0d1a"/>
+      <stop offset="1" stop-color="#141011"/>
+    </linearGradient>
+    <pattern id="orn" width="44" height="44" patternUnits="userSpaceOnUse">
+      <path d="M22 2l20 20-20 20L2 22z" fill="none" stroke="#e6c15f" stroke-opacity=".22" stroke-width="1.2"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#orn)" opacity=".5"/>
+  <circle cx="930" cy="220" r="210" fill="#e6c15f" opacity=".15"/>
+  <path d="M110 490c210-86 354-86 562 0 150 62 270 60 418 0" fill="none" stroke="#e6c15f" stroke-width="2" opacity=".65"/>
+  <text x="110" y="270" font-family="Georgia, serif" font-size="94" fill="#fffdf8">Nor-Dar</text>
+  <text x="114" y="342" font-family="Arial, sans-serif" font-size="34" letter-spacing="8" fill="#fff5d6">DANCE ENSEMBLE</text>
+  <text x="114" y="405" font-family="Arial, sans-serif" font-size="28" fill="#fffdf8" opacity=".78">Армянский танец, традиция и современная сцена</text>
+</svg>

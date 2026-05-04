@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760">
+  <defs><linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#141011"/><stop offset=".52" stop-color="#3a0710"/><stop offset="1" stop-color="#c79a2d"/></linearGradient></defs>
+  <rect width="1200" height="760" fill="url(#g)"/>
+  <circle cx="240" cy="220" r="160" fill="#e6c15f" opacity=".12"/>
+  <path d="M650 520c130-150 220-150 350 0" fill="none" stroke="#fff5d6" stroke-width="5" opacity=".45"/>
+  <text x="78" y="132" font-family="Arial, sans-serif" font-size="22" letter-spacing="6" fill="#fff5d6">OPEN CALL</text>
+  <text x="78" y="420" font-family="Georgia, serif" font-size="84" fill="#fffdf8">Новая постановка</text>
+</svg>

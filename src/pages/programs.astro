@@ -1,0 +1,34 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "@layouts/BaseLayout.astro";
+import PageHero from "@components/PageHero.astro";
+import SectionTitle from "@components/SectionTitle.astro";
+import ProgramCard from "@components/ProgramCard.astro";
+
+const programs = (await getCollection("programs")).sort((a, b) => a.data.order - b.data.order);
+---
+
+<BaseLayout title="Программы и шоу" description="Программы Nor-Dar Dance Ensemble: традиционные танцы, шоу-программы, концертные, свадебные и фестивальные выступления.">
+  <PageHero
+    eyebrow="Программы / шоу"
+    title="Форматы выступлений"
+    description="Выберите готовое направление или запросите индивидуальную постановку под событие, сцену и настроение гостей."
+  />
+
+  <section class="py-16 md:py-24">
+    <div class="container-page">
+      <SectionTitle
+        eyebrow="Репертуар"
+        title="Шесть сценических направлений"
+        description="Каждая программа может быть адаптирована по длительности, составу артистов, музыкальному материалу и визуальному акценту."
+      />
+      <div class="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {
+          programs.map((program) => (
+            <ProgramCard title={program.data.title} description={program.data.description} image={program.data.image} />
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</BaseLayout>

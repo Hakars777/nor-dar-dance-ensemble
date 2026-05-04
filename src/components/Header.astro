@@ -1,0 +1,98 @@
+---
+import { navigation } from "@data/navigation";
+
+interface Props {
+  settings?: {
+    siteTitle: string;
+    phone: string;
+  };
+}
+
+const { settings } = Astro.props;
+const currentPath = Astro.url.pathname;
+---
+
+<header class="sticky top-0 z-50 border-b border-white/10 bg-cherry-900/95 text-silk shadow-[0_10px_35px_rgba(34,4,9,.18)] backdrop-blur-xl">
+  <div class="container-page flex min-h-20 items-center justify-between gap-4">
+    <a href="/" class="focus-ring group flex items-center gap-3 rounded-sm" aria-label="Nor-Dar Dance Ensemble">
+      <span class="grid size-12 place-items-center border border-gold-300/70 bg-gold-300/10 text-gold-100 shadow-soft">
+        <span class="font-display text-2xl leading-none">Ն</span>
+      </span>
+      <span class="min-w-0">
+        <span class="font-display block text-xl leading-none text-white md:text-2xl">Nor-Dar</span>
+        <span class="block text-[0.68rem] uppercase tracking-[0.24em] text-gold-100/80">Dance Ensemble</span>
+      </span>
+    </a>
+
+    <nav class="hidden items-center gap-1 lg:flex" aria-label="Основная навигация">
+      {
+        navigation.map((item) => {
+          const isActive = item.href === "/" ? currentPath === "/" : currentPath.startsWith(item.href);
+          return (
+            <a
+              href={item.href}
+              class:list={[
+                "focus-ring rounded-sm px-3 py-2 text-sm font-medium text-white/80 transition hover:bg-white/10 hover:text-white",
+                isActive && "bg-white/10 text-gold-100"
+              ]}
+            >
+              {item.label}
+            </a>
+          );
+        })
+      }
+    </nav>
+
+    <div class="hidden items-center gap-3 lg:flex">
+      <a href={`tel:${settings?.phone ?? "+37400000000"}`} class="focus-ring rounded-sm border border-gold-300/50 px-4 py-2 text-sm font-semibold text-gold-100 transition hover:border-gold-300 hover:bg-gold-300/10">
+        Позвонить
+      </a>
+    </div>
+
+    <button
+      type="button"
+      class="focus-ring inline-grid size-11 place-items-center rounded-sm border border-gold-300/50 text-gold-100 lg:hidden"
+      aria-controls="mobile-menu"
+      aria-expanded="false"
+      data-menu-toggle
+    >
+      <span class="sr-only">Открыть меню</span>
+      <span class="relative block h-3.5 w-5" aria-hidden="true">
+        <span class="absolute left-0 top-0 h-0.5 w-5 bg-current transition"></span>
+        <span class="absolute left-0 top-1.5 h-0.5 w-5 bg-current transition"></span>
+        <span class="absolute left-0 top-3 h-0.5 w-5 bg-current transition"></span>
+      </span>
+    </button>
+  </div>
+
+  <div id="mobile-menu" class="hidden border-t border-white/10 bg-cherry-900 px-4 pb-5 pt-2 lg:hidden" data-mobile-menu>
+    <nav class="container-page grid gap-1" aria-label="Мобильная навигация">
+      {
+        navigation.map((item) => (
+          <a href={item.href} class="focus-ring rounded-sm px-3 py-3 text-base font-medium text-white/80 transition hover:bg-white/10 hover:text-white" data-mobile-link>
+            {item.label}
+          </a>
+        ))
+      }
+    </nav>
+  </div>
+</header>
+
+<script>
+  const toggle = document.querySelector("[data-menu-toggle]");
+  const menu = document.querySelector("[data-mobile-menu]");
+  const links = document.querySelectorAll("[data-mobile-link]");
+
+  const setMenu = (open) => {
+    toggle?.setAttribute("aria-expanded", String(open));
+    menu?.classList.toggle("hidden", !open);
+    document.body.classList.toggle("overflow-hidden", open);
+  };
+
+  toggle?.addEventListener("click", () => {
+    const isOpen = toggle.getAttribute("aria-expanded") === "true";
+    setMenu(!isOpen);
+  });
+
+  links.forEach((link) => link.addEventListener("click", () => setMenu(false)));
+</script>

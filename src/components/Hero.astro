@@ -1,0 +1,45 @@
+---
+interface Props {
+  title: string;
+  subtitle: string;
+  heroImage?: string;
+}
+
+const { title, subtitle, heroImage = "/uploads/brand/hero-stage.svg" } = Astro.props;
+---
+
+<section class="relative isolate min-h-[calc(88svh-5rem)] overflow-hidden bg-cherry-900 text-white">
+  <img
+    src={heroImage}
+    alt=""
+    class="absolute inset-0 -z-20 h-full w-full object-cover"
+    width="1800"
+    height="1200"
+    fetchpriority="high"
+  />
+  <div class="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(34,4,9,.94),rgba(34,4,9,.55)_48%,rgba(20,16,17,.2)),linear-gradient(180deg,rgba(34,4,9,.1),rgba(34,4,9,.82))]"></div>
+  <div class="absolute left-0 top-0 h-full w-8 ornament-tile opacity-25 md:w-16"></div>
+  <div class="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-ivory to-transparent"></div>
+
+  <div class="container-page flex min-h-[calc(88svh-5rem)] items-center py-20 md:py-24">
+    <div class="max-w-4xl">
+      <p class="mb-5 inline-flex border-l-2 border-gold-300 pl-4 text-xs font-bold uppercase tracking-[0.3em] text-gold-100">
+        Armenian dance show ensemble
+      </p>
+      <h1 class="font-display max-w-4xl text-5xl leading-[0.95] text-white md:text-7xl lg:text-8xl">
+        {title}
+      </h1>
+      <p class="mt-7 max-w-2xl text-lg leading-8 text-white/80 md:text-xl">
+        {subtitle}
+      </p>
+      <div class="mt-9 flex flex-col gap-3 sm:flex-row">
+        <a href="/programs/" class="focus-ring inline-flex min-h-12 items-center justify-center rounded-sm bg-gold-300 px-6 py-3 text-sm font-bold text-cherry-900 shadow-premium transition hover:bg-gold-100">
+          Посмотреть программы
+        </a>
+        <a href="/contacts/" class="focus-ring inline-flex min-h-12 items-center justify-center rounded-sm border border-white/40 px-6 py-3 text-sm font-bold text-white transition hover:border-gold-300 hover:bg-white/10">
+          Связаться
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

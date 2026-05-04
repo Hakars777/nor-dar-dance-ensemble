@@ -1,0 +1,34 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "@layouts/BaseLayout.astro";
+import PageHero from "@components/PageHero.astro";
+import SectionTitle from "@components/SectionTitle.astro";
+import GalleryGrid from "@components/GalleryGrid.astro";
+
+const gallery = (await getCollection("gallery")).sort((a, b) => {
+  const aDate = a.data.date?.getTime() ?? 0;
+  const bDate = b.data.date?.getTime() ?? 0;
+  return bDate - aDate;
+});
+---
+
+<BaseLayout title="Галерея" description="Фотогалерея Nor-Dar Dance Ensemble: сцена, костюмы, репетиции и армянская танцевальная эстетика.">
+  <PageHero
+    eyebrow="Галерея"
+    title="Фото ансамбля"
+    description="Крупные визуальные акценты, сценический свет, костюмы и живое движение Nor-Dar Dance Ensemble."
+  />
+
+  <section class="py-16 md:py-24">
+    <div class="container-page">
+      <SectionTitle
+        eyebrow="Фото"
+        title="Моменты сцены"
+        description="Изображения хранятся в content collection и могут добавляться через Decap CMS."
+      />
+      <div class="mt-10">
+        <GalleryGrid items={gallery} />
+      </div>
+    </div>
+  </section>
+</BaseLayout>

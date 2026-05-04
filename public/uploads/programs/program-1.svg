@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="760" viewBox="0 0 1000 760">
+  <defs><linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#220409"/><stop offset=".55" stop-color="#5b0d1a"/><stop offset="1" stop-color="#8b6417"/></linearGradient></defs>
+  <rect width="1000" height="760" fill="url(#g)"/>
+  <path d="M500 110l260 260-260 260-260-260z" fill="none" stroke="#e6c15f" stroke-width="3" opacity=".38"/>
+  <text x="70" y="610" font-family="Georgia, serif" font-size="56" fill="#fffdf8">Традиционные танцы</text>
+</svg>

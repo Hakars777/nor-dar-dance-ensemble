@@ -1,0 +1,78 @@
+---
+import { navigation } from "@data/navigation";
+
+interface Props {
+  settings?: {
+    siteTitle: string;
+    siteDescription: string;
+    phone: string;
+    email: string;
+    address: string;
+    instagram: string;
+    facebook: string;
+    youtube: string;
+    telegram: string;
+  };
+}
+
+const { settings } = Astro.props;
+const year = new Date().getFullYear();
+const socialLinks = [
+  { href: settings?.instagram, label: "Instagram" },
+  { href: settings?.facebook, label: "Facebook" },
+  { href: settings?.youtube, label: "YouTube" },
+  { href: settings?.telegram, label: "Telegram" }
+].filter((item) => item.href);
+---
+
+<footer class="relative overflow-hidden bg-ink text-white">
+  <div class="absolute inset-x-0 top-0 h-px bg-gold-line"></div>
+  <div class="absolute -right-16 top-10 h-56 w-56 rotate-45 border border-gold-300/20"></div>
+  <div class="container-page grid gap-10 py-14 md:grid-cols-[1.25fr_.8fr_.9fr]">
+    <div>
+      <div class="flex items-center gap-3">
+        <span class="grid size-12 place-items-center border border-gold-300/60 bg-gold-300/10 text-gold-100">
+          <span class="font-display text-2xl leading-none">Ն</span>
+        </span>
+        <div>
+          <p class="font-display text-2xl leading-none">{settings?.siteTitle ?? "Nor-Dar Dance Ensemble"}</p>
+          <p class="text-xs uppercase tracking-[0.24em] text-gold-100/70">Armenian stage dance</p>
+        </div>
+      </div>
+      <p class="mt-5 max-w-md text-sm leading-7 text-white/70">
+        {settings?.siteDescription ?? "Армянский танцевальный ансамбль с элегантными концертными, фестивальными и праздничными программами."}
+      </p>
+    </div>
+
+    <div>
+      <h2 class="font-display text-2xl text-gold-100">Навигация</h2>
+      <nav class="mt-4 grid grid-cols-2 gap-2 text-sm text-white/70" aria-label="Навигация в футере">
+        {navigation.map((item) => <a href={item.href} class="transition hover:text-gold-100">{item.label}</a>)}
+      </nav>
+    </div>
+
+    <div>
+      <h2 class="font-display text-2xl text-gold-100">Контакты</h2>
+      <div class="mt-4 grid gap-2 text-sm text-white/70">
+        <a href={`tel:${settings?.phone ?? ""}`} class="transition hover:text-gold-100">{settings?.phone}</a>
+        <a href={`mailto:${settings?.email ?? ""}`} class="transition hover:text-gold-100">{settings?.email}</a>
+        <p>{settings?.address}</p>
+      </div>
+      <div class="mt-5 flex flex-wrap gap-2">
+        {
+          socialLinks.map((item) => (
+            <a href={item.href} target="_blank" rel="noreferrer" class="focus-ring rounded-sm border border-white/10 px-3 py-2 text-xs font-semibold text-white/75 transition hover:border-gold-300/70 hover:text-gold-100">
+              {item.label}
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+  <div class="border-t border-white/10 py-5">
+    <div class="container-page flex flex-col gap-2 text-xs text-white/50 md:flex-row md:items-center md:justify-between">
+      <p>© {year} Nor-Dar Dance Ensemble. Все права защищены.</p>
+      <p>Статический сайт на Astro и Decap CMS.</p>
+    </div>
+  </div>
+</footer>

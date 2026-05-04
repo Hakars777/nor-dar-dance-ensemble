@@ -1,0 +1,55 @@
+---
+import { getCollection, render } from "astro:content";
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { formatDate } from "@utils/format";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("news", ({ data }) => !data.draft);
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post }
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const articleUrl = new URL(`/news/${post.slug}/`, Astro.site).toString();
+const articleJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "NewsArticle",
+  headline: post.data.title,
+  description: post.data.excerpt,
+  datePublished: post.data.date.toISOString(),
+  image: new URL(post.data.cover, Astro.site).toString(),
+  mainEntityOfPage: articleUrl,
+  publisher: {
+    "@type": "Organization",
+    name: "Nor-Dar Dance Ensemble"
+  }
+};
+---
+
+<BaseLayout title={post.data.title} description={post.data.excerpt} image={post.data.cover} type="article">
+  <script type="application/ld+json" set:html={JSON.stringify(articleJsonLd)} slot="head"></script>
+
+  <article>
+    <header class="relative isolate overflow-hidden bg-cherry-900 py-20 text-white md:py-24">
+      <img src={post.data.cover} alt="" width="1600" height="1000" loading="eager" class="absolute inset-0 -z-20 h-full w-full object-cover opacity-40" />
+      <div class="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(34,4,9,.96),rgba(34,4,9,.68)),linear-gradient(180deg,rgba(20,16,17,.18),rgba(34,4,9,.76))]"></div>
+      <div class="container-page max-w-4xl">
+        <a href="/news/" class="focus-ring inline-flex rounded-sm border border-gold-300/50 px-4 py-2 text-sm font-bold text-gold-100 transition hover:bg-gold-300 hover:text-cherry-900">Все новости</a>
+        <time datetime={post.data.date.toISOString()} class="mt-7 block text-xs font-bold uppercase tracking-[0.24em] text-gold-100/80">{formatDate(post.data.date)}</time>
+        <h1 class="mt-4 font-display text-5xl leading-[0.98] md:text-7xl">{post.data.title}</h1>
+        <p class="mt-6 text-lg leading-8 text-white/75">{post.data.excerpt}</p>
+      </div>
+    </header>
+
+    <section class="py-14 md:py-20">
+      <div class="container-page max-w-3xl">
+        <div class="prose-content">
+          <Content />
+        </div>
+      </div>
+    </section>
+  </article>
+</BaseLayout>

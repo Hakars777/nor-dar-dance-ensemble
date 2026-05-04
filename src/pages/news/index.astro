@@ -1,0 +1,41 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "@layouts/BaseLayout.astro";
+import PageHero from "@components/PageHero.astro";
+import SectionTitle from "@components/SectionTitle.astro";
+import PostCard from "@components/PostCard.astro";
+import { sortByDateDesc } from "@utils/format";
+
+const posts = sortByDateDesc(await getCollection("news", ({ data }) => !data.draft));
+---
+
+<BaseLayout title="Новости" description="Новости Nor-Dar Dance Ensemble: объявления, репетиции, афиша и материалы о выступлениях ансамбля.">
+  <PageHero
+    eyebrow="Новости"
+    title="Новости ансамбля"
+    description="Анонсы, объявления, новые программы и сценические события Nor-Dar Dance Ensemble."
+  />
+
+  <section class="py-16 md:py-24">
+    <div class="container-page">
+      <SectionTitle
+        eyebrow="Блог"
+        title="Последние публикации"
+        description="Каждая новость создается в Markdown и получает отдельную SEO-friendly страницу."
+      />
+      <div class="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {
+          posts.map((post) => (
+            <PostCard
+              title={post.data.title}
+              date={post.data.date}
+              cover={post.data.cover}
+              excerpt={post.data.excerpt}
+              href={`/news/${post.slug}/`}
+            />
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</BaseLayout>

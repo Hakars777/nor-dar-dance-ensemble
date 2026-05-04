@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="760" viewBox="0 0 1000 760">
+  <defs><linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#220409"/><stop offset=".5" stop-color="#9f2336"/><stop offset="1" stop-color="#141011"/></linearGradient></defs>
+  <rect width="1000" height="760" fill="url(#g)"/>
+  <path d="M0 530c160-70 300-70 460 0 170 74 320 72 540-20v250H0z" fill="#141011" opacity=".55"/>
+  <circle cx="725" cy="210" r="170" fill="#e6c15f" opacity=".18"/>
+  <text x="70" y="610" font-family="Georgia, serif" font-size="56" fill="#fffdf8">Фестивальные номера</text>
+</svg>

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="760" viewBox="0 0 1000 760">
+  <defs><linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#141011"/><stop offset=".45" stop-color="#3a0710"/><stop offset="1" stop-color="#c79a2d"/></linearGradient></defs>
+  <rect width="1000" height="760" fill="url(#g)"/>
+  <path d="M120 350h760M120 430h760M120 510h760" stroke="#fff5d6" stroke-width="2" opacity=".2"/>
+  <path d="M255 210c60 78 120 78 180 0M560 210c60 78 120 78 180 0" fill="none" stroke="#e6c15f" stroke-width="5" opacity=".45"/>
+  <text x="64" y="116" font-family="Arial, sans-serif" font-size="18" letter-spacing="5" fill="#fff5d6">REHEARSAL</text>
+  <text x="64" y="610" font-family="Georgia, serif" font-size="58" fill="#fffdf8">Репетиция</text>
+</svg>

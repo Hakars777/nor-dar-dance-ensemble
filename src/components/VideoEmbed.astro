@@ -1,0 +1,57 @@
+---
+interface Props {
+  title: string;
+  provider: "youtube" | "vimeo";
+  videoId: string;
+  description?: string;
+}
+
+const { title, provider, videoId, description } = Astro.props;
+---
+
+<article class="overflow-hidden border border-cherry-900/10 bg-white shadow-soft">
+  <div class="relative aspect-video bg-cherry-900" data-video-lite data-provider={provider} data-video-id={videoId} data-title={title}>
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_34%_28%,rgba(230,193,95,.32),transparent_22rem),linear-gradient(135deg,#220409,#5b0d1a_58%,#141011)]"></div>
+    <div class="absolute inset-0 ornament-tile opacity-15"></div>
+    <button type="button" class="focus-ring absolute inset-0 grid place-items-center text-white" data-video-play aria-label={`Воспроизвести видео: ${title}`}>
+      <span class="grid size-20 place-items-center rounded-full border border-gold-300/70 bg-white/10 text-gold-100 shadow-premium backdrop-blur transition hover:bg-gold-300 hover:text-cherry-900">
+        <span class="ml-1 h-0 w-0 border-y-[13px] border-l-[20px] border-y-transparent border-l-current"></span>
+      </span>
+    </button>
+  </div>
+  <div class="p-6">
+    <h3 class="font-display text-2xl leading-tight text-cherry-900">{title}</h3>
+    {description && <p class="mt-3 text-sm leading-7 text-ink/60">{description}</p>}
+  </div>
+</article>
+
+<script>
+  const videoCards = document.querySelectorAll("[data-video-lite]");
+
+  videoCards.forEach((card) => {
+    const button = card.querySelector("[data-video-play]");
+    button?.addEventListener(
+      "click",
+      () => {
+        const provider = card.getAttribute("data-provider");
+        const videoId = card.getAttribute("data-video-id");
+        const title = card.getAttribute("data-title") || "Video";
+        const src =
+          provider === "vimeo"
+            ? `https://player.vimeo.com/video/${videoId}?autoplay=1&title=0&byline=0&portrait=0`
+            : `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0`;
+
+        const iframe = document.createElement("iframe");
+        iframe.src = src;
+        iframe.title = title;
+        iframe.loading = "lazy";
+        iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+        iframe.allowFullscreen = true;
+        iframe.className = "absolute inset-0 h-full w-full";
+        card.textContent = "";
+        card.appendChild(iframe);
+      },
+      { once: true }
+    );
+  });
+</script>

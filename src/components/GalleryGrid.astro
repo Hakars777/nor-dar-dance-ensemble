@@ -1,0 +1,37 @@
+---
+interface GalleryItem {
+  data: {
+    title: string;
+    image: string;
+    alt: string;
+    category?: string;
+  };
+}
+
+interface Props {
+  items: GalleryItem[];
+  limit?: number;
+}
+
+const { items, limit } = Astro.props;
+const visibleItems = typeof limit === "number" ? items.slice(0, limit) : items;
+---
+
+<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+  {
+    visibleItems.map((item, index) => (
+      <figure class:list={[
+        "group relative overflow-hidden border border-cherry-900/10 bg-cherry-900 shadow-soft",
+        index === 0 && !limit ? "sm:col-span-2" : ""
+      ]}>
+        <div class="aspect-[4/3]">
+          <img src={item.data.image} alt={item.data.alt} width="900" height="675" loading="lazy" class="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
+        </div>
+        <figcaption class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/90 to-transparent p-5 text-white">
+          <span class="text-xs font-bold uppercase tracking-[0.2em] text-gold-100/80">{item.data.category}</span>
+          <p class="mt-1 font-display text-2xl leading-tight">{item.data.title}</p>
+        </figcaption>
+      </figure>
+    ))
+  }
+</div>

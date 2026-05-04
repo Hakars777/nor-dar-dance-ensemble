@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760">
+  <defs><linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#220409"/><stop offset=".5" stop-color="#5b0d1a"/><stop offset="1" stop-color="#8b6417"/></linearGradient></defs>
+  <rect width="1200" height="760" fill="url(#g)"/>
+  <rect x="70" y="70" width="1060" height="620" fill="none" stroke="#e6c15f" stroke-width="2" opacity=".45"/>
+  <path d="M810 250c-82 38-134 110-154 212l-24 120h70l16-76h92l18 76h75l-28-120c-20-90 0-158 62-206z" fill="#141011" opacity=".45"/>
+  <text x="80" y="140" font-family="Arial, sans-serif" font-size="22" letter-spacing="6" fill="#fff5d6">CULTURE FESTIVAL</text>
+  <text x="80" y="430" font-family="Georgia, serif" font-size="78" fill="#fffdf8">Фестиваль культуры</text>
+</svg>

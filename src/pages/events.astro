@@ -1,0 +1,68 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "@layouts/BaseLayout.astro";
+import PageHero from "@components/PageHero.astro";
+import SectionTitle from "@components/SectionTitle.astro";
+import EventCard from "@components/EventCard.astro";
+import { sortByDateAsc, sortByDateDesc } from "@utils/format";
+
+const events = await getCollection("events");
+const upcoming = sortByDateAsc(events.filter((event) => event.data.status === "upcoming"));
+const past = sortByDateDesc(events.filter((event) => event.data.status === "past"));
+---
+
+<BaseLayout title="Мероприятия" description="Афиша Nor-Dar Dance Ensemble: ближайшие и прошедшие выступления, концерты, фестивали и праздничные события.">
+  <PageHero
+    eyebrow="Афиша"
+    title="Мероприятия"
+    description="Ближайшие выступления ансамбля и архив прошедших событий."
+  />
+
+  <section class="py-16 md:py-24">
+    <div class="container-page">
+      <SectionTitle
+        eyebrow="Upcoming"
+        title="Ближайшие мероприятия"
+        description="События, где Nor-Dar Dance Ensemble скоро выйдет на сцену."
+      />
+      <div class="mt-10 grid gap-6">
+        {
+          upcoming.map((event) => (
+            <EventCard
+              title={event.data.title}
+              date={event.data.date}
+              place={event.data.place}
+              description={event.data.description}
+              cover={event.data.cover}
+              status={event.data.status}
+            />
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-white py-16 md:py-24">
+    <div class="container-page">
+      <SectionTitle
+        eyebrow="Archive"
+        title="Прошедшие мероприятия"
+        description="Выступления, концерты и фестивальные номера из архива ансамбля."
+      />
+      <div class="mt-10 grid gap-6">
+        {
+          past.map((event) => (
+            <EventCard
+              title={event.data.title}
+              date={event.data.date}
+              place={event.data.place}
+              description={event.data.description}
+              cover={event.data.cover}
+              status={event.data.status}
+            />
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</BaseLayout>

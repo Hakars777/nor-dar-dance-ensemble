@@ -1,0 +1,38 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "@layouts/BaseLayout.astro";
+import PageHero from "@components/PageHero.astro";
+import SectionTitle from "@components/SectionTitle.astro";
+import VideoEmbed from "@components/VideoEmbed.astro";
+
+const videos = (await getCollection("videos")).sort((a, b) => {
+  const aDate = a.data.date?.getTime() ?? 0;
+  const bDate = b.data.date?.getTime() ?? 0;
+  return bDate - aDate;
+});
+---
+
+<BaseLayout title="Видео" description="Видео Nor-Dar Dance Ensemble: концертные, фестивальные и праздничные выступления с lazy loading плеером.">
+  <PageHero
+    eyebrow="Видео"
+    title="Выступления в движении"
+    description="Видео добавляются через админку, а плееры подключаются только после клика, чтобы сайт оставался быстрым."
+  />
+
+  <section class="py-16 md:py-24">
+    <div class="container-page">
+      <SectionTitle
+        eyebrow="Записи"
+        title="Концертные и сценические видео"
+        description="Для YouTube и Vimeo достаточно указать платформу и ID ролика в Decap CMS."
+      />
+      <div class="mt-10 grid gap-6 lg:grid-cols-2">
+        {
+          videos.map((video) => (
+            <VideoEmbed title={video.data.title} provider={video.data.provider} videoId={video.data.videoId} description={video.data.description} />
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</BaseLayout>

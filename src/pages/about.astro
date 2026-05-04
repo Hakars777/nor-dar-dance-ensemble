@@ -1,0 +1,53 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import PageHero from "@components/PageHero.astro";
+import SectionTitle from "@components/SectionTitle.astro";
+---
+
+<BaseLayout title="О ансамбле" description="Nor-Dar Dance Ensemble представляет армянскую танцевальную культуру в концертных, фестивальных и праздничных форматах.">
+  <PageHero
+    eyebrow="О ансамбле"
+    title="Nor-Dar Dance Ensemble"
+    description="Ансамбль, в котором армянская традиция звучит современно, сценично и эмоционально точно."
+  />
+
+  <section class="py-16 md:py-24">
+    <div class="container-page grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
+      <div>
+        <SectionTitle
+          eyebrow="Культура и сцена"
+          title="Мы представляем армянский танец как живое искусство"
+          description="Nor-Dar Dance Ensemble работает с традиционными и сценическими постановками, сохраняя уважение к корням и создавая выразительный концертный образ."
+        />
+      </div>
+      <div class="prose-content max-w-3xl">
+        <p>
+          Nor-Dar Dance Ensemble представляет армянскую танцевальную культуру через пластичный, точный и эмоциональный язык сцены. В репертуаре ансамбля есть традиционные армянские танцы, концертные номера, праздничные программы и индивидуальные постановки для особых событий.
+        </p>
+        <p>
+          Мы выступаем на концертах, фестивалях, городских мероприятиях, свадьбах, корпоративных вечерах и частных праздниках. Для каждого формата важны не только музыка и костюм, но и драматургия выхода, визуальная цельность, уважение к традиции и сильный контакт со зрителем.
+        </p>
+        <p>
+          Стиль Nor-Dar строится на теплом сценическом характере: выразительные линии, сильная групповая энергетика, благородные костюмы и современная подача армянской культуры. Ансамбль подходит для профессиональных сцен, камерных залов и торжеств, где танец должен стать ярким художественным акцентом.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-white py-16 md:py-24">
+    <div class="container-page grid gap-6 md:grid-cols-3">
+      <div class="border border-cherry-900/10 p-7 shadow-soft">
+        <p class="font-display text-3xl text-cherry-900">Традиция</p>
+        <p class="mt-3 text-sm leading-7 text-ink/70">Армянская пластика, ритм, костюм и сценическая этика остаются основой каждого номера.</p>
+      </div>
+      <div class="border border-cherry-900/10 p-7 shadow-soft">
+        <p class="font-display text-3xl text-cherry-900">Сцена</p>
+        <p class="mt-3 text-sm leading-7 text-ink/70">Постановки выглядят цельно на больших площадках, фестивалях и концертных программах.</p>
+      </div>
+      <div class="border border-cherry-900/10 p-7 shadow-soft">
+        <p class="font-display text-3xl text-cherry-900">Событие</p>
+        <p class="mt-3 text-sm leading-7 text-ink/70">Для свадеб и праздников подбирается программа, которая поддерживает настроение вечера.</p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

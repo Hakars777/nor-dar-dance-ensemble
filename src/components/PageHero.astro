@@ -1,0 +1,19 @@
+---
+interface Props {
+  eyebrow?: string;
+  title: string;
+  description: string;
+}
+
+const { eyebrow, title, description } = Astro.props;
+---
+
+<section class="relative isolate overflow-hidden bg-cherry-900 py-20 text-white md:py-24">
+  <img src="/uploads/brand/page-hero.svg" alt="" width="1800" height="680" loading="eager" class="absolute inset-0 -z-20 h-full w-full object-cover" />
+  <div class="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(34,4,9,.94),rgba(34,4,9,.68)),linear-gradient(180deg,rgba(20,16,17,.12),rgba(34,4,9,.7))]"></div>
+  <div class="container-page">
+    {eyebrow && <p class="mb-4 text-xs font-bold uppercase tracking-[0.28em] text-gold-100/80">{eyebrow}</p>}
+    <h1 class="font-display max-w-4xl text-5xl leading-[0.98] md:text-7xl">{title}</h1>
+    <p class="mt-6 max-w-2xl text-lg leading-8 text-white/75">{description}</p>
+  </div>
+</section>

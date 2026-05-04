@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="760" viewBox="0 0 1000 760">
+  <defs><linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#5b0d1a"/><stop offset=".5" stop-color="#220409"/><stop offset="1" stop-color="#8b6417"/></linearGradient></defs>
+  <rect width="1000" height="760" fill="url(#g)"/>
+  <path d="M160 130h680v500H160z" fill="none" stroke="#e6c15f" stroke-width="2" opacity=".4"/>
+  <path d="M690 230l58 58-58 58-58-58zM790 330l58 58-58 58-58-58z" fill="none" stroke="#fff5d6" stroke-width="3" opacity=".35"/>
+  <text x="64" y="116" font-family="Arial, sans-serif" font-size="18" letter-spacing="5" fill="#fff5d6">COSTUME</text>
+  <text x="64" y="610" font-family="Georgia, serif" font-size="58" fill="#fffdf8">Костюмы и свет</text>
+</svg>

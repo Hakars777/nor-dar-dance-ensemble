@@ -1,0 +1,133 @@
+backend:
+  name: test-repo
+
+# local_backend: true
+locale: ru
+media_folder: "public/uploads"
+public_folder: "/uploads"
+site_url: "https://pink-albatross-667205.hostingersite.com"
+display_url: "https://pink-albatross-667205.hostingersite.com"
+
+editor:
+  preview: false
+
+collections:
+  - name: "news"
+    label: "Новости"
+    folder: "src/content/news"
+    create: true
+    extension: "md"
+    format: "frontmatter"
+    slug: "{{slug}}"
+    media_folder: "public/uploads/news"
+    public_folder: "/uploads/news"
+    summary: "{{title}} - {{date}}"
+    fields:
+      - { label: "Заголовок", name: "title", widget: "string" }
+      - { label: "Дата", name: "date", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false }
+      - { label: "Обложка", name: "cover", widget: "image" }
+      - { label: "Краткое описание", name: "excerpt", widget: "text" }
+      - { label: "Черновик", name: "draft", widget: "boolean", default: false, required: false }
+      - { label: "Текст новости", name: "body", widget: "markdown" }
+
+  - name: "events"
+    label: "Мероприятия"
+    folder: "src/content/events"
+    create: true
+    extension: "md"
+    format: "frontmatter"
+    slug: "{{slug}}"
+    media_folder: "public/uploads/events"
+    public_folder: "/uploads/events"
+    summary: "{{title}} - {{date}}"
+    fields:
+      - { label: "Название", name: "title", widget: "string" }
+      - { label: "Дата", name: "date", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false }
+      - { label: "Место", name: "place", widget: "string" }
+      - { label: "Описание", name: "description", widget: "text" }
+      - { label: "Обложка", name: "cover", widget: "image" }
+      - label: "Статус"
+        name: "status"
+        widget: "select"
+        options:
+          - { label: "Ближайшее", value: "upcoming" }
+          - { label: "Прошедшее", value: "past" }
+      - { label: "Текст", name: "body", widget: "markdown", required: false }
+
+  - name: "gallery"
+    label: "Галерея"
+    folder: "src/content/gallery"
+    create: true
+    extension: "md"
+    format: "frontmatter"
+    slug: "{{slug}}"
+    media_folder: "public/uploads/gallery"
+    public_folder: "/uploads/gallery"
+    summary: "{{title}}"
+    fields:
+      - { label: "Название", name: "title", widget: "string" }
+      - { label: "Фото", name: "image", widget: "image" }
+      - { label: "Alt-текст", name: "alt", widget: "string" }
+      - { label: "Дата", name: "date", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false, required: false }
+      - { label: "Категория", name: "category", widget: "string", default: "Сцена" }
+      - { label: "Показывать на главной", name: "featured", widget: "boolean", default: false, required: false }
+      - { label: "Комментарий", name: "body", widget: "markdown", required: false }
+
+  - name: "videos"
+    label: "Видео"
+    folder: "src/content/videos"
+    create: true
+    extension: "md"
+    format: "frontmatter"
+    slug: "{{slug}}"
+    summary: "{{title}}"
+    fields:
+      - { label: "Название", name: "title", widget: "string" }
+      - label: "Платформа"
+        name: "provider"
+        widget: "select"
+        options:
+          - { label: "YouTube", value: "youtube" }
+          - { label: "Vimeo", value: "vimeo" }
+      - { label: "ID видео", name: "videoId", widget: "string" }
+      - { label: "Описание", name: "description", widget: "text" }
+      - { label: "Дата", name: "date", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false, required: false }
+      - { label: "Комментарий", name: "body", widget: "markdown", required: false }
+
+  - name: "programs"
+    label: "Программы"
+    folder: "src/content/programs"
+    create: true
+    extension: "md"
+    format: "frontmatter"
+    slug: "{{slug}}"
+    media_folder: "public/uploads/programs"
+    public_folder: "/uploads/programs"
+    summary: "{{title}}"
+    fields:
+      - { label: "Название", name: "title", widget: "string" }
+      - { label: "Краткое описание", name: "description", widget: "text" }
+      - { label: "Фото", name: "image", widget: "image" }
+      - { label: "Порядок", name: "order", widget: "number", value_type: "int", default: 1 }
+      - { label: "Показывать на главной", name: "featured", widget: "boolean", default: true, required: false }
+      - { label: "Полное описание", name: "body", widget: "markdown", required: false }
+
+  - name: "settings"
+    label: "Настройки сайта"
+    files:
+      - name: "site"
+        label: "Основные настройки"
+        file: "src/content/settings/site.json"
+        fields:
+          - { label: "Фото главной страницы (hero)", name: "heroImage", widget: "image", required: false, hint: "Фото на фоне главного экрана (рекомендуется 1800×1200)" }
+          - { label: "Название сайта", name: "siteTitle", widget: "string" }
+          - { label: "Описание сайта", name: "siteDescription", widget: "text" }
+          - { label: "Телефон", name: "phone", widget: "string" }
+          - { label: "Email", name: "email", widget: "string" }
+          - { label: "Адрес", name: "address", widget: "string" }
+          - { label: "Instagram", name: "instagram", widget: "string" }
+          - { label: "Facebook", name: "facebook", widget: "string" }
+          - { label: "YouTube", name: "youtube", widget: "string" }
+          - { label: "Telegram", name: "telegram", widget: "string" }
+          - { label: "Главный SEO title", name: "seoTitle", widget: "string" }
+          - { label: "Главный SEO description", name: "seoDescription", widget: "text" }

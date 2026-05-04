@@ -1,0 +1,83 @@
+
+> nor-dar-dance-ensemble@1.0.0 dev
+> astro dev --host 127.0.0.1 --port 4321
+
+[2m10:42:12[22m [34m[types][39m Generated [2m1ms[22m
+[2m10:42:12[22m [34m[content][39m Syncing content
+[2m10:42:12[22m [34m[content][39m Synced content
+
+[42m[1m astro [22m[49m [32mv5.18.1[39m [2mready in[22m 1357 [2mms[22m
+
+[2m┃[22m Local    [36mhttp://127.0.0.1:4321/[39m
+
+[2m10:42:12[22m [32mwatching for file changes...[39m
+[2m10:42:35[22m [33m[404][39m /admin/ [2m241ms[22m
+[2m10:42:35[22m [34m[200][39m / [2m9ms[22m
+[2m10:42:56[22m [34m[watch][39m public/admin/index.html
+[2m10:43:43[22m [34m[200][39m /admin/ [2m5ms[22m
+[2m10:43:43[22m [34m[200][39m /news/novaya-kontsertnaya-programma/ [2m8ms[22m
+[2m10:44:32[22m [34m[200][39m /contacts/ [2m8ms[22m
+[2m10:45:01[22m [34m[200][39m /admin/ [2m3ms[22m
+[2m10:45:34[22m Configuration file updated. Restarting...
+[2m10:45:34[22m [34m[vite][39m Re-optimizing dependencies because vite config has changed
+[2m10:45:35[22m [34m[content][39m Syncing content
+[2m10:45:35[22m [34m[content][39m Synced content
+[2m10:45:35[22m [34m[types][39m Generated [2m617ms[22m
+[2m10:45:35[22m [34m[vite][39m Re-optimizing dependencies because vite config has changed
+[2m10:49:06[22m [34m[200][39m / [2m63ms[22m
+[2m10:49:14[22m [34m[200][39m /contacts/ [2m6ms[22m
+[2m10:49:21[22m [34m[200][39m /events/ [2m4ms[22m
+[2m10:49:21[22m [34m[200][39m /videos/ [2m4ms[22m
+[2m10:49:31[22m [34m[200][39m /about/ [2m3ms[22m
+[2m10:49:35[22m [34m[200][39m / [2m6ms[22m
+[2m10:49:40[22m [34m[200][39m / [2m4ms[22m
+[2m10:49:41[22m [34m[200][39m / [2m5ms[22m
+[2m10:49:41[22m [34m[200][39m / [2m4ms[22m
+[2m10:49:42[22m [34m[200][39m / [2m4ms[22m
+[2m10:49:42[22m [34m[200][39m / [2m3ms[22m
+[2m10:49:42[22m [34m[200][39m /contacts/ [2m3ms[22m
+[2m10:49:44[22m [34m[200][39m /gallery/ [2m3ms[22m
+[2m10:49:47[22m [34m[200][39m /videos/ [2m4ms[22m
+[2m10:49:48[22m [34m[200][39m /gallery/ [2m3ms[22m
+[2m10:50:08[22m [34m[200][39m /contacts/ [2m4ms[22m
+[2m10:50:13[22m [34m[200][39m / [2m5ms[22m
+[2m10:50:14[22m [34m[200][39m /about/ [2m3ms[22m
+[2m10:50:14[22m [34m[200][39m /programs/ [2m3ms[22m
+[2m10:50:14[22m [34m[200][39m /gallery/ [2m3ms[22m
+[2m10:50:15[22m [34m[200][39m / [2m4ms[22m
+[2m10:50:25[22m [34m[200][39m /admin/ [2m2ms[22m
+[2m10:51:59[22m [34m[200][39m /about/ [2m4ms[22m
+[2m10:52:00[22m [34m[200][39m / [2m4ms[22m
+[2m10:52:08[22m [34m[200][39m /contacts/ [2m5ms[22m
+[2m11:11:54[22m Configuration file updated. Restarting...
+[2m11:11:55[22m [34m[vite][39m Re-optimizing dependencies because vite config has changed
+[2m11:11:55[22m [34m[content][39m Syncing content
+[2m11:11:55[22m [34m[content][39m Astro config changed
+[2m11:11:55[22m [34m[content][39m Clearing content store
+[2m11:11:55[22m [34m[content][39m Synced content
+[2m11:11:55[22m [34m[types][39m Generated [2m679ms[22m
+[2m11:11:55[22m [34m[vite][39m Re-optimizing dependencies because vite config has changed
+[2m11:11:56[22m [34m[200][39m /admin/ [2m3ms[22m
+[2m11:11:56[22m [34m[200][39m /contacts/ [2m61ms[22m
+[2m11:16:44[22m [34m[200][39m /admin/ [2m3ms[22m
+[33m[1m12:12:08[22m [WARN] [glob-loader][39m No entry type found for site.json.tmp.25412.1777882328008
+[2m12:12:08[22m [34m[glob-loader][39m Reloaded data from [32msite.json.tmp.25412.1777882328008[39m
+[2m12:12:08[22m [34m[glob-loader][39m Reloaded data from [32msite.json[39m
+[2m12:12:09[22m [34m[200][39m /admin/ [2m9ms[22m
+[2m12:12:09[22m [34m[200][39m /contacts/ [2m29ms[22m
+[2m12:12:20[22m [34m[watch][39m src/components/Hero.astro
+[2m12:12:20[22m [34m[watch][39m src/components/Hero.astro
+[2m12:12:21[22m [34m[200][39m /admin/ [2m4ms[22m
+[2m12:12:21[22m [34m[200][39m /contacts/ [2m89ms[22m
+[2m12:12:26[22m [34m[watch][39m src/pages/index.astro
+[2m12:12:26[22m [34m[watch][39m src/pages/index.astro
+[2m12:12:27[22m [34m[200][39m /admin/ [2m4ms[22m
+[2m12:12:27[22m [34m[200][39m /contacts/ [2m65ms[22m
+[2m12:12:36[22m [34m[watch][39m src/content/config.ts
+[2m12:12:36[22m [34m[watch][39m src/content/config.ts
+[2m12:12:36[22m [34m[content][39m Syncing content
+[2m12:12:36[22m [34m[content][39m Content config changed
+[2m12:12:36[22m [34m[content][39m Clearing content store
+[2m12:12:36[22m [34m[200][39m /admin/ [2m9ms[22m
+[2m12:12:36[22m [34m[content][39m Synced content
+[2m12:12:36[22m [34m[200][39m /contacts/ [2m90ms[22m

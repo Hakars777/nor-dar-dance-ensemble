@@ -1,0 +1,26 @@
+{
+  "name": "nor-dar-dance-ensemble",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "cms": "decap-server",
+    "astro": "astro",
+    "postinstall": "node scripts/copy-decap-cms.mjs"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "^4.3.14",
+    "@astrojs/tailwind": "^6.0.2",
+    "astro": "^5.18.1",
+    "decap-cms-app": "^3.12.2",
+    "tailwindcss": "^3.4.19"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.5.0",
+    "decap-server": "^3.7.0",
+    "typescript": "^5.9.3"
+  }
+}

@@ -1,0 +1,5 @@
+[Shiki] 10 instances have been created. Shiki is supposed to be used as a singleton, consider refactoring your code to cache your highlighter instance; Or call `highlighter.dispose()` to release unused instances.
+[31m[1m11:11:55[22m [ERROR][39m (0 , __vite_ssr_import_0__.renderHead) is not a function
+  [1mStack trace:[22m
+[2m    at C:\Users\onair-am\Desktop\Cursor\nor-dar-dance-ensemble\src\pages\admin.astro:1:1
+    [...] See full stack trace in the browser, or rerun with --verbose.[22m
