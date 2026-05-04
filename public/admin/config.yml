@@ -1,5 +1,9 @@
 backend:
-  name: test-repo
+  name: github
+  repo: Hakars777/nor-dar-dance-ensemble
+  branch: main
+  auth_type: pkce
+  app_id: Ov23lisyfe83D6TTfx1H
 
 # local_backend: true
 locale: ru
