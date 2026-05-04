@@ -1,14 +1,14 @@
 {
-  "heroImage": "/uploads/brand/hero-stage.svg",
-  "siteTitle": "Nor-Dar Dance Ensemble",
-  "siteDescription": "Премиальный армянский танцевальный ансамбль для концертов, фестивалей, свадеб и частных событий.",
-  "phone": "+374 00 000 000",
-  "email": "info@nor-dar.example",
-  "address": "Ереван, Армения",
-  "instagram": "https://instagram.com/nordardance",
-  "facebook": "https://facebook.com/nordardance",
-  "youtube": "https://youtube.com/@nordardance",
   "telegram": "https://t.me/nordardance",
+  "heroImage": "/uploads/1600x450_shushi_armenian_dance_ensemble_onsale4.jpg",
+  "youtube": "https://youtube.com/@nordardance",
+  "facebook": "https://facebook.com/nordardance",
+  "phone": "+374 00 000 000",
+  "siteTitle": "Nor-Dar Dance Ensemble",
+  "instagram": "https://instagram.com/nordardance",
+  "address": "Ереван, Армения",
+  "siteDescription": "Премиальный армянский танцевальный ансамбль для концертов, фестивалей, свадеб и частных событий.",
   "seoTitle": "Nor-Dar Dance Ensemble - армянский танцевальный ансамбль",
+  "email": "info@nor-dar.example",
   "seoDescription": "Nor-Dar Dance Ensemble - армянский танцевальный ансамбль, соединяющий традицию, сценическую энергию и современную эстетику."
 }
