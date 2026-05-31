@@ -9,6 +9,8 @@
     "preview": "astro preview",
     "cms": "decap-server",
     "astro": "astro",
+    "tts": "node scripts/generate-tts.js",
+    "tts:local": "TTS_MODE=local node scripts/generate-tts.js",
     "postinstall": "node scripts/copy-decap-cms.mjs"
   },
   "dependencies": {
