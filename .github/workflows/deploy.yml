@@ -30,4 +30,4 @@ jobs:
       - name: Deploy to Hostinger
         env:
           HOSTINGER_API_TOKEN: ${{ secrets.HOSTINGER_API_TOKEN }}
-        run: node --experimental-vm-modules scripts/deploy-hostinger.mjs dist.zip
+        run: node scripts/deploy-hostinger.mjs dist.zip
