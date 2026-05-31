@@ -1,18 +1,9 @@
 ---
-// Derive audio slug from current URL:
-//   /           → home
-//   /about/     → about
-//   /news/slug/ → news-slug
-const { pathname } = Astro.url;
-const slug =
-  pathname === '/' || pathname === ''
-    ? 'home'
-    : pathname.replace(/^\/|\/$/g, '').replace(/\//g, '-');
-
-const audioSrc = `/audio/${slug}.mp3`;
+// No API key needed — uses browser Web Speech API (SpeechSynthesis)
+// Reads text extracted from <main> at runtime
 ---
 
-<!-- Floating TTS player — hidden until audio file confirms it can play -->
+<!-- Floating TTS player — shown only if browser supports SpeechSynthesis -->
 <div id="tts-widget" class="fixed bottom-6 right-6 z-50 hidden" role="region" aria-label="Озвучка страницы">
   <div class="flex items-center gap-2 rounded-full bg-cherry-800 px-3 py-2 shadow-lg text-white">
 
@@ -20,7 +11,7 @@ const audioSrc = `/audio/${slug}.mp3`;
     <button
       id="tts-toggle"
       type="button"
-      aria-label="Воспроизвести"
+      aria-label="Воспроизвести страницу"
       class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
     >
       <svg id="tts-icon-play" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-4 w-4" aria-hidden="true">
@@ -31,22 +22,22 @@ const audioSrc = `/audio/${slug}.mp3`;
       </svg>
     </button>
 
-    <!-- Progress track (click to seek) -->
+    <!-- Label -->
+    <span class="hidden text-[10px] font-bold uppercase tracking-widest text-white/60 sm:block">TTS</span>
+
+    <!-- Progress bar -->
     <div
       id="tts-track"
-      class="relative h-1 w-20 cursor-pointer rounded-full bg-white/25 sm:w-28"
+      class="relative h-1 w-20 overflow-hidden rounded-full bg-white/25 sm:w-28"
       role="progressbar"
       aria-valuemin="0"
       aria-valuemax="100"
       aria-valuenow="0"
     >
-      <div id="tts-fill" class="h-full w-0 rounded-full bg-gold-400"></div>
+      <div id="tts-fill" class="h-full w-0 rounded-full bg-gold-400 transition-[width]"></div>
     </div>
 
-    <!-- Elapsed time -->
-    <span id="tts-time" class="w-8 shrink-0 text-right text-xs tabular-nums text-white/70">0:00</span>
-
-    <!-- Close button -->
+    <!-- Close -->
     <button
       id="tts-close"
       type="button"
@@ -60,56 +51,133 @@ const audioSrc = `/audio/${slug}.mp3`;
   </div>
 </div>
 
-<audio id="tts-audio" src={audioSrc} preload="none"></audio>
-
 <script>
-  const widget  = document.getElementById('tts-widget')!;
-  const audio   = document.getElementById('tts-audio') as HTMLAudioElement;
-  const toggle  = document.getElementById('tts-toggle')!;
-  const iconPlay  = document.getElementById('tts-icon-play')!;
-  const iconPause = document.getElementById('tts-icon-pause')!;
-  const track   = document.getElementById('tts-track')!;
-  const fill    = document.getElementById('tts-fill')!;
-  const timeEl  = document.getElementById('tts-time')!;
-  const closeBtn = document.getElementById('tts-close')!;
+  if (!('speechSynthesis' in window)) {
+    // Browser doesn't support TTS — leave widget hidden
+  } else {
+    const widget  = document.getElementById('tts-widget')!;
+    const toggle  = document.getElementById('tts-toggle')!;
+    const iconPlay  = document.getElementById('tts-icon-play')!;
+    const iconPause = document.getElementById('tts-icon-pause')!;
+    const fill    = document.getElementById('tts-fill')!;
+    const track   = document.getElementById('tts-track')!;
+    const closeBtn = document.getElementById('tts-close')!;
 
-  // Show widget only when browser confirms the audio file is playable
-  audio.addEventListener('canplay', () => widget.classList.remove('hidden'), { once: true });
-  audio.addEventListener('error', () => widget.remove());
-  audio.load();
+    // --- Extract readable text from <main> ---
+    function extractText(): string {
+      const main = document.querySelector('main');
+      if (!main) return document.title;
 
-  function fmt(s: number) {
-    const m = Math.floor(s / 60);
-    return `${m}:${Math.floor(s % 60).toString().padStart(2, '0')}`;
+      // Clone so we can strip unwanted elements without touching the DOM
+      const clone = main.cloneNode(true) as HTMLElement;
+      clone.querySelectorAll('nav, footer, script, style, [aria-hidden="true"], .sr-only').forEach(el => el.remove());
+
+      return (clone.textContent ?? '')
+        .replace(/\s{2,}/g, ' ')
+        .replace(/\n{2,}/g, ' ')
+        .trim();
+    }
+
+    // --- State ---
+    let utterance: SpeechSynthesisUtterance | null = null;
+    let playing = false;
+    let totalChars = 0;
+    let spokenChars = 0;
+    let progressTimer: ReturnType<typeof setInterval> | null = null;
+
+    function setPlaying(state: boolean) {
+      playing = state;
+      iconPlay.classList.toggle('hidden', state);
+      iconPause.classList.toggle('hidden', !state);
+      toggle.setAttribute('aria-label', state ? 'Пауза' : 'Воспроизвести');
+    }
+
+    function updateProgress(chars: number) {
+      if (!totalChars) return;
+      const pct = Math.min(100, (chars / totalChars) * 100);
+      fill.style.width = `${pct}%`;
+      track.setAttribute('aria-valuenow', String(Math.round(pct)));
+    }
+
+    function resetProgress() {
+      spokenChars = 0;
+      fill.style.width = '0%';
+      track.setAttribute('aria-valuenow', '0');
+    }
+
+    function stop() {
+      speechSynthesis.cancel();
+      if (progressTimer) { clearInterval(progressTimer); progressTimer = null; }
+      setPlaying(false);
+      resetProgress();
+      utterance = null;
+    }
+
+    function play() {
+      const text = extractText();
+      if (!text) return;
+
+      totalChars = text.length;
+      resetProgress();
+
+      utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'ru-RU';
+      utterance.rate = 0.95;
+
+      // Track progress via boundary events (word by word)
+      utterance.addEventListener('boundary', (e: SpeechSynthesisEvent) => {
+        spokenChars = e.charIndex;
+        updateProgress(spokenChars);
+      });
+
+      utterance.addEventListener('end', () => {
+        setPlaying(false);
+        updateProgress(totalChars);
+        if (progressTimer) { clearInterval(progressTimer); progressTimer = null; }
+      });
+
+      utterance.addEventListener('error', () => {
+        setPlaying(false);
+        if (progressTimer) { clearInterval(progressTimer); progressTimer = null; }
+      });
+
+      speechSynthesis.speak(utterance);
+      setPlaying(true);
+
+      // Fallback progress via timer (for browsers with no boundary events)
+      const estimatedMs = (text.length / 15) * 1000; // ~15 chars/sec at rate 0.95
+      const startTime = Date.now();
+      progressTimer = setInterval(() => {
+        if (!playing) { clearInterval(progressTimer!); return; }
+        const elapsed = Date.now() - startTime;
+        const estimated = Math.round((elapsed / estimatedMs) * totalChars);
+        if (estimated > spokenChars) updateProgress(estimated);
+      }, 250);
+    }
+
+    // --- Controls ---
+    toggle.addEventListener('click', () => {
+      if (speechSynthesis.speaking && !speechSynthesis.paused) {
+        speechSynthesis.pause();
+        setPlaying(false);
+        if (progressTimer) { clearInterval(progressTimer); progressTimer = null; }
+      } else if (speechSynthesis.paused) {
+        speechSynthesis.resume();
+        setPlaying(true);
+      } else {
+        play();
+      }
+    });
+
+    closeBtn.addEventListener('click', () => {
+      stop();
+      widget.remove();
+    });
+
+    // Stop when navigating away
+    window.addEventListener('beforeunload', () => speechSynthesis.cancel());
+
+    // Show widget
+    widget.classList.remove('hidden');
   }
-
-  function syncIcons(playing: boolean) {
-    iconPlay.classList.toggle('hidden', playing);
-    iconPause.classList.toggle('hidden', !playing);
-    toggle.setAttribute('aria-label', playing ? 'Пауза' : 'Воспроизвести');
-  }
-
-  toggle.addEventListener('click', () => audio.paused ? audio.play() : audio.pause());
-  audio.addEventListener('play',  () => syncIcons(true));
-  audio.addEventListener('pause', () => syncIcons(false));
-  audio.addEventListener('ended', () => { syncIcons(false); audio.currentTime = 0; });
-
-  audio.addEventListener('timeupdate', () => {
-    if (!audio.duration) return;
-    const pct = (audio.currentTime / audio.duration) * 100;
-    fill.style.width = `${pct}%`;
-    track.setAttribute('aria-valuenow', String(Math.round(pct)));
-    timeEl.textContent = fmt(audio.currentTime);
-  });
-
-  track.addEventListener('click', (e: MouseEvent) => {
-    if (!audio.duration) return;
-    const rect = track.getBoundingClientRect();
-    audio.currentTime = ((e.clientX - rect.left) / rect.width) * audio.duration;
-  });
-
-  closeBtn.addEventListener('click', () => {
-    audio.pause();
-    widget.remove();
-  });
 </script>
