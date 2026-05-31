@@ -1,0 +1,115 @@
+---
+// Derive audio slug from current URL:
+//   /           → home
+//   /about/     → about
+//   /news/slug/ → news-slug
+const { pathname } = Astro.url;
+const slug =
+  pathname === '/' || pathname === ''
+    ? 'home'
+    : pathname.replace(/^\/|\/$/g, '').replace(/\//g, '-');
+
+const audioSrc = `/audio/${slug}.mp3`;
+---
+
+<!-- Floating TTS player — hidden until audio file confirms it can play -->
+<div id="tts-widget" class="fixed bottom-6 right-6 z-50 hidden" role="region" aria-label="Озвучка страницы">
+  <div class="flex items-center gap-2 rounded-full bg-cherry-800 px-3 py-2 shadow-lg text-white">
+
+    <!-- Play / Pause toggle -->
+    <button
+      id="tts-toggle"
+      type="button"
+      aria-label="Воспроизвести"
+      class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
+    >
+      <svg id="tts-icon-play" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-4 w-4" aria-hidden="true">
+        <path d="M8 5v14l11-7z"/>
+      </svg>
+      <svg id="tts-icon-pause" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="hidden h-4 w-4" aria-hidden="true">
+        <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+      </svg>
+    </button>
+
+    <!-- Progress track (click to seek) -->
+    <div
+      id="tts-track"
+      class="relative h-1 w-20 cursor-pointer rounded-full bg-white/25 sm:w-28"
+      role="progressbar"
+      aria-valuemin="0"
+      aria-valuemax="100"
+      aria-valuenow="0"
+    >
+      <div id="tts-fill" class="h-full w-0 rounded-full bg-gold-400"></div>
+    </div>
+
+    <!-- Elapsed time -->
+    <span id="tts-time" class="w-8 shrink-0 text-right text-xs tabular-nums text-white/70">0:00</span>
+
+    <!-- Close button -->
+    <button
+      id="tts-close"
+      type="button"
+      aria-label="Закрыть плеер"
+      class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-white/50 transition hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-3 w-3" aria-hidden="true">
+        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<audio id="tts-audio" src={audioSrc} preload="none"></audio>
+
+<script>
+  const widget  = document.getElementById('tts-widget')!;
+  const audio   = document.getElementById('tts-audio') as HTMLAudioElement;
+  const toggle  = document.getElementById('tts-toggle')!;
+  const iconPlay  = document.getElementById('tts-icon-play')!;
+  const iconPause = document.getElementById('tts-icon-pause')!;
+  const track   = document.getElementById('tts-track')!;
+  const fill    = document.getElementById('tts-fill')!;
+  const timeEl  = document.getElementById('tts-time')!;
+  const closeBtn = document.getElementById('tts-close')!;
+
+  // Show widget only when browser confirms the audio file is playable
+  audio.addEventListener('canplay', () => widget.classList.remove('hidden'), { once: true });
+  audio.addEventListener('error', () => widget.remove());
+  audio.load();
+
+  function fmt(s: number) {
+    const m = Math.floor(s / 60);
+    return `${m}:${Math.floor(s % 60).toString().padStart(2, '0')}`;
+  }
+
+  function syncIcons(playing: boolean) {
+    iconPlay.classList.toggle('hidden', playing);
+    iconPause.classList.toggle('hidden', !playing);
+    toggle.setAttribute('aria-label', playing ? 'Пауза' : 'Воспроизвести');
+  }
+
+  toggle.addEventListener('click', () => audio.paused ? audio.play() : audio.pause());
+  audio.addEventListener('play',  () => syncIcons(true));
+  audio.addEventListener('pause', () => syncIcons(false));
+  audio.addEventListener('ended', () => { syncIcons(false); audio.currentTime = 0; });
+
+  audio.addEventListener('timeupdate', () => {
+    if (!audio.duration) return;
+    const pct = (audio.currentTime / audio.duration) * 100;
+    fill.style.width = `${pct}%`;
+    track.setAttribute('aria-valuenow', String(Math.round(pct)));
+    timeEl.textContent = fmt(audio.currentTime);
+  });
+
+  track.addEventListener('click', (e: MouseEvent) => {
+    if (!audio.duration) return;
+    const rect = track.getBoundingClientRect();
+    audio.currentTime = ((e.clientX - rect.left) / rect.width) * audio.duration;
+  });
+
+  closeBtn.addEventListener('click', () => {
+    audio.pause();
+    widget.remove();
+  });
+</script>
