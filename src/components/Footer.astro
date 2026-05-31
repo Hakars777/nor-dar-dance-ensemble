@@ -72,7 +72,22 @@ const socialLinks = [
   <div class="border-t border-white/10 py-5">
     <div class="container-page flex flex-col gap-2 text-xs text-white/50 md:flex-row md:items-center md:justify-between">
       <p>© {year} Nor-Dar Dance Ensemble. Все права защищены.</p>
+      <div id="digital-clock" class="font-mono text-sm tracking-widest text-gold-100/70"></div>
       <p>Статический сайт на Astro и Decap CMS.</p>
     </div>
   </div>
 </footer>
+
+<script>
+  function updateClock() {
+    const clock = document.getElementById("digital-clock");
+    if (!clock) return;
+    const now = new Date();
+    const h = String(now.getHours()).padStart(2, "0");
+    const m = String(now.getMinutes()).padStart(2, "0");
+    const s = String(now.getSeconds()).padStart(2, "0");
+    clock.textContent = `${h}:${m}:${s}`;
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+</script>
