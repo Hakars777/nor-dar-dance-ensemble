@@ -1,0 +1,1793 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Проверка подписок Instagram</title>
+<style>
+  :root {
+    --bg: #f4f5f7;
+    --panel: #ffffff;
+    --panel-2: #f0f2f5;
+    --text: #1a1d21;
+    --text-muted: #5c6570;
+    --border: #dfe3e8;
+    --accent: #3a5bd9;
+    --accent-hover: #2f4bbd;
+    --accent-soft: #e8ecfb;
+    --success: #1e9e63;
+    --warning: #c9821a;
+    --danger: #d64545;
+    --shadow: 0 2px 10px rgba(20, 30, 60, 0.06);
+    --radius: 14px;
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-left: env(safe-area-inset-left, 0px);
+    --safe-right: env(safe-area-inset-right, 0px);
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #14171c;
+    --panel: #1d2127;
+    --panel-2: #262b33;
+    --text: #eef1f5;
+    --text-muted: #9aa4b0;
+    --border: #333a44;
+    --accent: #5a7bf0;
+    --accent-hover: #7089f2;
+    --accent-soft: #232b45;
+    --success: #35c07f;
+    --warning: #e0a642;
+    --danger: #f06666;
+    --shadow: 0 2px 14px rgba(0, 0, 0, 0.35);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #14171c;
+      --panel: #1d2127;
+      --panel-2: #262b33;
+      --text: #eef1f5;
+      --text-muted: #9aa4b0;
+      --border: #333a44;
+      --accent: #5a7bf0;
+      --accent-hover: #7089f2;
+      --accent-soft: #232b45;
+      --success: #35c07f;
+      --warning: #e0a642;
+      --danger: #f06666;
+      --shadow: 0 2px 14px rgba(0, 0, 0, 0.35);
+    }
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    padding:
+      calc(var(--safe-top) + 8px)
+      calc(var(--safe-right) + 12px)
+      calc(var(--safe-bottom) + 24px)
+      calc(var(--safe-left) + 12px);
+    max-width: 960px;
+    margin: 0 auto;
+    min-height: 100vh;
+  }
+
+  header.app-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+    margin: 0 0 4px 0;
+    line-height: 1.2;
+  }
+
+  .subtitle {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    margin: 0;
+  }
+
+  .theme-toggle {
+    flex: 0 0 auto;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 999px;
+    padding: 10px 14px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    white-space: nowrap;
+    min-height: 44px;
+  }
+  .theme-toggle:hover { border-color: var(--accent); }
+
+  .privacy-note {
+    background: var(--accent-soft);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    font-size: 0.9rem;
+    margin: 12px 0;
+  }
+  .privacy-note strong { color: var(--accent); }
+
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+
+  /* Drop zone */
+  .dropzone {
+    border: 2px dashed var(--border);
+    border-radius: var(--radius);
+    background: var(--panel-2);
+    padding: 28px 16px;
+    text-align: center;
+    transition: border-color 0.15s ease, background 0.15s ease;
+    cursor: pointer;
+  }
+  .dropzone.dragover {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+  .dropzone-icon { font-size: 2.4rem; line-height: 1; margin-bottom: 8px; }
+  .dropzone-title { font-weight: 600; margin-bottom: 4px; }
+  .dropzone-hint { color: var(--text-muted); font-size: 0.88rem; }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 18px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    min-height: 44px;
+    text-decoration: none;
+    transition: background 0.15s ease;
+  }
+  .btn:hover { background: var(--accent-hover); }
+  .btn:active { transform: translateY(1px); }
+
+  .btn-secondary {
+    background: var(--panel);
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .btn-secondary:hover { background: var(--panel-2); border-color: var(--accent); }
+
+  .btn-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 14px;
+  }
+
+  .hidden { display: none !important; }
+
+  /* Processing indicator */
+  .processing {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+  }
+  .spinner {
+    width: 22px;
+    height: 22px;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    flex: 0 0 auto;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .message {
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 0.92rem;
+    margin-top: 12px;
+    border: 1px solid var(--border);
+  }
+  .message.error {
+    background: rgba(214, 69, 69, 0.10);
+    border-color: var(--danger);
+    color: var(--danger);
+  }
+  .message.warning {
+    background: rgba(201, 130, 26, 0.12);
+    border-color: var(--warning);
+    color: var(--warning);
+  }
+  .message.info {
+    background: var(--accent-soft);
+    color: var(--text);
+  }
+  .message ul { margin: 6px 0 0 0; padding-left: 20px; }
+
+  /* Stats */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+  }
+  .stat {
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px;
+    text-align: center;
+  }
+  .stat-num { font-size: 1.7rem; font-weight: 700; line-height: 1.1; }
+  .stat-label { color: var(--text-muted); font-size: 0.82rem; margin-top: 4px; }
+  .stat.accent .stat-num { color: var(--accent); }
+  .stat.danger .stat-num { color: var(--danger); }
+  .stat.warning .stat-num { color: var(--warning); }
+  .stat.success .stat-num { color: var(--success); }
+
+  /* Tabs */
+  .tabs {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 8px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 6px;
+    margin-bottom: 12px;
+    scrollbar-width: thin;
+  }
+  .tab {
+    flex: 0 0 auto;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 999px;
+    padding: 10px 14px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    min-height: 42px;
+  }
+  .tab .count {
+    display: inline-block;
+    background: var(--panel-2);
+    color: var(--text-muted);
+    border-radius: 999px;
+    padding: 1px 8px;
+    font-size: 0.78rem;
+    margin-left: 6px;
+  }
+  .tab.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+  .tab.active .count { background: rgba(255,255,255,0.25); color: #fff; }
+
+  /* List controls */
+  .list-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .search-input {
+    flex: 1 1 200px;
+    min-width: 140px;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    color: var(--text);
+    font-size: 0.95rem;
+    min-height: 44px;
+  }
+  .search-input:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+
+  .small-btn {
+    background: var(--panel);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 0.86rem;
+    font-weight: 600;
+    cursor: pointer;
+    min-height: 44px;
+  }
+  .small-btn:hover { border-color: var(--accent); }
+
+  .list-meta {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+  }
+
+  /* List items */
+  ul.user-list { list-style: none; margin: 0; padding: 0; }
+  li.user-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 6px;
+    border-bottom: 1px solid var(--border);
+  }
+  li.user-item:last-child { border-bottom: none; }
+  .user-index {
+    flex: 0 0 auto;
+    width: 40px;
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    text-align: right;
+  }
+  .user-name {
+    flex: 1 1 auto;
+    font-weight: 600;
+    word-break: break-all;
+    font-size: 0.95rem;
+  }
+  .user-actions { flex: 0 0 auto; display: flex; gap: 6px; }
+  .icon-btn {
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    text-decoration: none;
+    min-height: 38px;
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+  }
+  .icon-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  .empty-list {
+    text-align: center;
+    color: var(--text-muted);
+    padding: 30px 10px;
+    font-size: 0.95rem;
+  }
+
+  .show-more-wrap { text-align: center; margin-top: 14px; }
+
+  /* Diagnostics */
+  details.diagnostics {
+    margin-top: 8px;
+  }
+  details.diagnostics summary {
+    cursor: pointer;
+    font-weight: 600;
+    padding: 10px 4px;
+    color: var(--accent);
+    list-style: none;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+  details.diagnostics summary::-webkit-details-marker { display: none; }
+  details.diagnostics summary::before { content: "▸ "; margin-right: 6px; }
+  details.diagnostics[open] summary::before { content: "▾ "; }
+  .diag-body {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px;
+    margin-top: 8px;
+    overflow-x: auto;
+  }
+  .diag-body h4 { margin: 10px 0 4px 0; color: var(--text); font-size: 0.9rem; }
+  .diag-body h4:first-child { margin-top: 0; }
+  .diag-body ul { margin: 0; padding-left: 18px; }
+  .diag-body code {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1px 5px;
+    font-size: 0.82rem;
+    word-break: break-all;
+  }
+
+  .toast {
+    position: fixed;
+    left: 50%;
+    bottom: calc(var(--safe-bottom) + 18px);
+    transform: translateX(-50%) translateY(20px);
+    background: var(--text);
+    color: var(--bg);
+    padding: 12px 18px;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    box-shadow: var(--shadow);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 100;
+    max-width: 90vw;
+    text-align: center;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  footer.app-footer {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    margin-top: 24px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+  }
+
+  @media (max-width: 520px) {
+    h1 { font-size: 1.3rem; }
+    .stat-num { font-size: 1.45rem; }
+    .user-index { width: 30px; }
+    body { font-size: 15px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <div>
+    <h1>Проверка подписок Instagram</h1>
+    <p class="subtitle">Локальный анализ невзаимных подписок. Всё работает офлайн.</p>
+  </div>
+  <button class="theme-toggle" id="themeToggle" type="button" aria-label="Переключить тему">🌗 Тема</button>
+</header>
+
+<div class="privacy-note">
+  🔒 <strong>Все данные обрабатываются локально на вашем устройстве и никуда не отправляются.</strong>
+  Приложение не использует интернет, вход в Instagram, cookie, токены или API.
+</div>
+
+<!-- Upload card -->
+<section class="card" id="uploadCard">
+  <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Область загрузки файлов">
+    <div class="dropzone-icon">📂</div>
+    <div class="dropzone-title">Перетащите сюда ZIP-архив или файлы</div>
+    <div class="dropzone-hint">
+      Поддерживаются ZIP-архив Instagram, а также отдельные JSON и HTML-файлы
+      (подписчики и подписки). Можно выбрать несколько файлов сразу.
+    </div>
+    <div class="btn-row" style="justify-content:center;">
+      <button class="btn" id="pickBtn" type="button">Выбрать ZIP или файлы</button>
+    </div>
+  </div>
+
+  <input type="file" id="fileInput" class="hidden" multiple
+         accept=".zip,.json,.html,.htm,application/zip,application/json,text/html">
+
+  <div id="processing" class="processing hidden" style="margin-top:14px;">
+    <div class="spinner"></div>
+    <span id="processingText">Обработка данных…</span>
+  </div>
+
+  <div id="messages"></div>
+
+  <div class="btn-row hidden" id="resetRow">
+    <button class="btn btn-secondary" id="resetBtn" type="button">🔄 Сбросить и начать заново</button>
+  </div>
+</section>
+
+<!-- Diagnostics -->
+<section class="card hidden" id="diagCard">
+  <details class="diagnostics" id="diagDetails">
+    <summary>Подробности обработки</summary>
+    <div class="diag-body" id="diagBody"></div>
+  </details>
+</section>
+
+<!-- Results -->
+<section class="card hidden" id="statsCard">
+  <div class="stats-grid" id="statsGrid"></div>
+  <div class="btn-row">
+    <button class="small-btn" id="exportAllBtn" type="button">⬇️ Экспорт всех результатов в CSV</button>
+  </div>
+</section>
+
+<section class="card hidden" id="resultsCard">
+  <div class="tabs" id="tabs"></div>
+
+  <div class="list-controls">
+    <input type="text" class="search-input" id="searchInput" placeholder="Поиск по имени пользователя…" autocomplete="off">
+    <button class="small-btn" id="sortBtn" type="button">↕️ Сортировка: А→Я</button>
+  </div>
+
+  <div class="list-meta" id="listMeta"></div>
+
+  <div class="btn-row" style="margin-top:0; margin-bottom:12px;">
+    <button class="small-btn" id="copyListBtn" type="button">📋 Копировать весь список</button>
+    <button class="small-btn" id="exportListBtn" type="button">⬇️ Экспорт списка в CSV</button>
+  </div>
+
+  <ul class="user-list" id="userList"></ul>
+
+  <div class="show-more-wrap hidden" id="showMoreWrap">
+    <button class="btn btn-secondary" id="showMoreBtn" type="button">Показать ещё</button>
+  </div>
+</section>
+
+<footer class="app-footer">
+  Проверка подписок Instagram · Работает полностью офлайн в вашем браузере ·
+  Нет отправки данных, аналитики и трекеров.
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script src="jszip.min.js"></script>
+<script>
+"use strict";
+
+/* ============================================================
+   Проверка подписок Instagram — вся логика приложения.
+   Данные никогда не покидают устройство пользователя.
+   ============================================================ */
+
+(function () {
+
+  /* ---------- Ссылки на элементы интерфейса ---------- */
+  var el = {
+    themeToggle: document.getElementById("themeToggle"),
+    dropzone: document.getElementById("dropzone"),
+    pickBtn: document.getElementById("pickBtn"),
+    fileInput: document.getElementById("fileInput"),
+    processing: document.getElementById("processing"),
+    processingText: document.getElementById("processingText"),
+    messages: document.getElementById("messages"),
+    resetRow: document.getElementById("resetRow"),
+    resetBtn: document.getElementById("resetBtn"),
+    diagCard: document.getElementById("diagCard"),
+    diagBody: document.getElementById("diagBody"),
+    statsCard: document.getElementById("statsCard"),
+    statsGrid: document.getElementById("statsGrid"),
+    exportAllBtn: document.getElementById("exportAllBtn"),
+    resultsCard: document.getElementById("resultsCard"),
+    tabs: document.getElementById("tabs"),
+    searchInput: document.getElementById("searchInput"),
+    sortBtn: document.getElementById("sortBtn"),
+    listMeta: document.getElementById("listMeta"),
+    copyListBtn: document.getElementById("copyListBtn"),
+    exportListBtn: document.getElementById("exportListBtn"),
+    userList: document.getElementById("userList"),
+    showMoreWrap: document.getElementById("showMoreWrap"),
+    showMoreBtn: document.getElementById("showMoreBtn"),
+    toast: document.getElementById("toast")
+  };
+
+  /* ---------- Состояние приложения ---------- */
+  var PAGE_SIZE = 100;
+
+  var state = {
+    followers: [],          // массив username (нормализованных)
+    following: [],
+    categories: {           // готовые списки для вкладок
+      not_following_back: [],
+      i_dont_follow: [],
+      mutual: [],
+      followers: [],
+      following: []
+    },
+    activeTab: "not_following_back",
+    sortAsc: true,
+    searchQuery: "",
+    renderLimit: PAGE_SIZE,
+    filtered: []            // текущий отфильтрованный + отсортированный список
+  };
+
+  var TAB_DEFS = [
+    { key: "not_following_back", label: "Не подписаны на меня" },
+    { key: "i_dont_follow", label: "Я не подписан" },
+    { key: "mutual", label: "Взаимные" },
+    { key: "followers", label: "Подписчики" },
+    { key: "following", label: "Подписки" }
+  ];
+
+  var CATEGORY_CSV_NAME = {
+    not_following_back: "not_following_back",
+    i_dont_follow: "i_dont_follow",
+    mutual: "mutual",
+    followers: "followers",
+    following: "following"
+  };
+
+  /* ============================================================
+     ТЕМА
+     ============================================================ */
+  function applyStoredTheme() {
+    var stored = null;
+    try { stored = localStorage.getItem("ig_checker_theme"); } catch (e) { stored = null; }
+    if (stored === "light" || stored === "dark") {
+      document.documentElement.setAttribute("data-theme", stored);
+    }
+    // Если ничего не сохранено — используется системная тема через CSS.
+  }
+
+  function toggleTheme() {
+    var current = document.documentElement.getAttribute("data-theme");
+    var next;
+    if (current === "dark") {
+      next = "light";
+    } else if (current === "light") {
+      next = "dark";
+    } else {
+      // Нет явной темы — определяем текущую системную и переключаем на противоположную.
+      var prefersDark = window.matchMedia &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches;
+      next = prefersDark ? "light" : "dark";
+    }
+    document.documentElement.setAttribute("data-theme", next);
+    try { localStorage.setItem("ig_checker_theme", next); } catch (e) { /* игнорируем */ }
+  }
+
+  /* ============================================================
+     УВЕДОМЛЕНИЯ И СООБЩЕНИЯ
+     ============================================================ */
+  var toastTimer = null;
+  function showToast(text) {
+    el.toast.textContent = text;
+    el.toast.classList.add("show");
+    if (toastTimer) { clearTimeout(toastTimer); }
+    toastTimer = setTimeout(function () {
+      el.toast.classList.remove("show");
+    }, 2000);
+  }
+
+  function clearMessages() {
+    el.messages.innerHTML = "";
+  }
+
+  function addMessage(type, html) {
+    var div = document.createElement("div");
+    div.className = "message " + type;
+    div.innerHTML = html;
+    el.messages.appendChild(div);
+  }
+
+  function showProcessing(text) {
+    el.processingText.textContent = text || "Обработка данных…";
+    el.processing.classList.remove("hidden");
+  }
+  function hideProcessing() {
+    el.processing.classList.add("hidden");
+  }
+
+  /* ============================================================
+     НОРМАЛИЗАЦИЯ ИМЁН ПОЛЬЗОВАТЕЛЕЙ
+     ============================================================ */
+
+  // Служебные пути Instagram, которые не являются именами пользователей.
+  var IG_RESERVED = {
+    "": true, "p": true, "explore": true, "reels": true, "reel": true,
+    "stories": true, "accounts": true, "about": true, "developer": true,
+    "developers": true, "legal": true, "directory": true, "web": true,
+    "tv": true, "igtv": true, "help": true, "privacy": true, "terms": true,
+    "login": true, "emails": true, "session": true, "challenge": true,
+    "direct": true, "ajax": true, "graphql": true, "api": true
+  };
+
+  // Извлекает username из значения (может быть ссылкой Instagram или именем).
+  function extractUsername(raw) {
+    if (raw === null || raw === undefined) { return ""; }
+    var value = String(raw).trim();
+    if (!value) { return ""; }
+
+    // Если это ссылка на instagram — вытащить первый сегмент пути.
+    if (/instagram\.com/i.test(value)) {
+      var cleaned = value.replace(/^https?:\/\//i, "");
+      // убрать домен
+      var pathStart = cleaned.indexOf("/");
+      if (pathStart === -1) { return ""; }
+      var path = cleaned.substring(pathStart + 1);
+      // убрать query и hash
+      path = path.split("?")[0].split("#")[0];
+      // первый сегмент
+      var seg = path.split("/")[0];
+      value = seg;
+    } else {
+      // Может быть просто ссылка без протокола, содержащая слэши.
+      // Берём последний непустой сегмент, если есть слэши.
+      if (value.indexOf("/") !== -1) {
+        var parts = value.split(/[?#]/)[0].split("/").filter(function (s) { return s.length > 0; });
+        if (parts.length > 0) {
+          value = parts[parts.length - 1];
+        }
+      }
+    }
+
+    return normalizeUsername(value);
+  }
+
+  function normalizeUsername(value) {
+    if (value === null || value === undefined) { return ""; }
+    var v = String(value).trim();
+    if (!v) { return ""; }
+    // убрать ведущий @
+    v = v.replace(/^@+/, "");
+    // убрать пробелы внутри (имена Instagram не содержат пробелов)
+    v = v.replace(/\s+/g, "");
+    // убрать завершающие слэши
+    v = v.replace(/\/+$/, "");
+    // если внезапно остались слэши — взять последний сегмент
+    if (v.indexOf("/") !== -1) {
+      var segs = v.split("/").filter(function (s) { return s.length > 0; });
+      v = segs.length ? segs[segs.length - 1] : "";
+    }
+    // нижний регистр
+    v = v.toLowerCase();
+    // отфильтровать зарезервированные служебные пути
+    if (IG_RESERVED[v] === true) { return ""; }
+    return v;
+  }
+
+  // Убирает дубликаты и пустые значения, сохраняя порядок.
+  function dedupe(list) {
+    var seen = Object.create(null);
+    var out = [];
+    for (var i = 0; i < list.length; i++) {
+      var u = list[i];
+      if (!u) { continue; }
+      if (seen[u] === true) { continue; }
+      seen[u] = true;
+      out.push(u);
+    }
+    return out;
+  }
+
+  /* ============================================================
+     УНИВЕРСАЛЬНЫЙ ПАРСЕР JSON
+     Рекурсивно извлекает имена пользователей из любой структуры
+     экспорта Instagram.
+     ============================================================ */
+
+  // Извлекает username из одного узла string_list_data-подобного объекта.
+  function usernameFromStringListItem(item) {
+    if (!item || typeof item !== "object") { return ""; }
+    // приоритет: value → href → title
+    if (typeof item.value === "string" && item.value.trim()) {
+      var uv = extractUsername(item.value);
+      if (uv) { return uv; }
+    }
+    if (typeof item.href === "string" && item.href.trim()) {
+      var uh = extractUsername(item.href);
+      if (uh) { return uh; }
+    }
+    return "";
+  }
+
+  // Рекурсивно обходит структуру и собирает имена пользователей.
+  function collectUsernamesFromJson(node, out, depth) {
+    if (depth > 60) { return; } // защита от аномально глубоких структур
+    if (node === null || node === undefined) { return; }
+
+    if (Array.isArray(node)) {
+      for (var i = 0; i < node.length; i++) {
+        collectUsernamesFromJson(node[i], out, depth + 1);
+      }
+      return;
+    }
+
+    if (typeof node !== "object") {
+      return;
+    }
+
+    // Случай 1: объект с string_list_data (стандартный элемент подписки/подписчика)
+    if (Object.prototype.hasOwnProperty.call(node, "string_list_data") &&
+        Array.isArray(node.string_list_data)) {
+      var got = "";
+      for (var s = 0; s < node.string_list_data.length; s++) {
+        got = usernameFromStringListItem(node.string_list_data[s]);
+        if (got) { out.push(got); }
+      }
+      // Если внутри string_list_data ничего не нашли — пробуем title самого узла.
+      if (!got && typeof node.title === "string" && node.title.trim()) {
+        var ut = extractUsername(node.title) || normalizeUsername(node.title);
+        if (ut) { out.push(ut); }
+      }
+      return;
+    }
+
+    // Случай 2: узел сам является элементом string_list_data (есть value/href)
+    if ((typeof node.value === "string" && node.value.trim()) ||
+        (typeof node.href === "string" && node.href.trim())) {
+      var direct = usernameFromStringListItem(node);
+      if (direct) {
+        out.push(direct);
+        return;
+      }
+    }
+
+    // Случай 3: рекурсивно обойти все значения объекта
+    // (relationships_following, relationships_followers и любые вложенные структуры)
+    for (var key in node) {
+      if (!Object.prototype.hasOwnProperty.call(node, key)) { continue; }
+      var child = node[key];
+      if (child && typeof child === "object") {
+        collectUsernamesFromJson(child, out, depth + 1);
+      }
+    }
+  }
+
+  // Разбирает текст JSON-файла в список username.
+  function parseJsonUsernames(text) {
+    var data;
+    try {
+      data = JSON.parse(text);
+    } catch (e) {
+      throw new Error("Некорректный JSON");
+    }
+    var out = [];
+    collectUsernamesFromJson(data, out, 0);
+    return dedupe(out);
+  }
+
+  /* ============================================================
+     ПАРСЕР HTML
+     ============================================================ */
+  function parseHtmlUsernames(text) {
+    if (typeof DOMParser === "undefined") {
+      throw new Error("Браузер не поддерживает DOMParser");
+    }
+    var parser = new DOMParser();
+    var doc = parser.parseFromString(text, "text/html");
+    var anchors = doc.querySelectorAll('a[href]');
+    var out = [];
+    for (var i = 0; i < anchors.length; i++) {
+      var href = anchors[i].getAttribute("href") || "";
+      if (!/instagram\.com/i.test(href)) { continue; }
+      var u = extractUsername(href);
+      if (u) { out.push(u); }
+    }
+    return dedupe(out);
+  }
+
+  /* ============================================================
+     КЛАССИФИКАЦИЯ ФАЙЛОВ
+     Определяет, является ли файл списком подписчиков или подписок,
+     по имени и по содержимому.
+     ============================================================ */
+
+  // Возвращает "followers", "following" или "unknown" по имени файла.
+  function classifyByName(pathLower) {
+    var base = pathLower.split("/").pop();
+
+    // Явные подписки
+    if (/following/.test(base)) { return "following"; }
+    if (/follow_requests_sent/.test(base)) { return "unknown"; }
+
+    // Явные подписчики (followers_1, followers, follower)
+    if (/followers?_?\d*/.test(base) || /followers/.test(base)) { return "followers"; }
+    if (/follower/.test(base)) { return "followers"; }
+
+    return "unknown";
+  }
+
+  // Пытается определить тип по содержимому JSON (ключи структуры).
+  function classifyJsonByContent(text) {
+    // Быстрая проверка по характерным ключам без полного анализа.
+    if (/relationships_following/.test(text)) { return "following"; }
+    if (/relationships_followers/.test(text)) { return "followers"; }
+    if (/"following"\s*:/.test(text) && !/followers/.test(text)) { return "following"; }
+    return "unknown";
+  }
+
+  /* ============================================================
+     ЧТЕНИЕ ФАЙЛОВ
+     ============================================================ */
+
+  function readFileAsText(file) {
+    return new Promise(function (resolve, reject) {
+      if (typeof file.text === "function") {
+        file.text().then(resolve).catch(function () {
+          fallbackReadText(file, resolve, reject);
+        });
+      } else {
+        fallbackReadText(file, resolve, reject);
+      }
+    });
+  }
+
+  function fallbackReadText(file, resolve, reject) {
+    if (typeof FileReader === "undefined") {
+      reject(new Error("Браузер не поддерживает FileReader"));
+      return;
+    }
+    var reader = new FileReader();
+    reader.onload = function () { resolve(String(reader.result || "")); };
+    reader.onerror = function () { reject(new Error("Не удалось прочитать файл")); };
+    reader.readAsText(file, "UTF-8");
+  }
+
+  function readFileAsArrayBuffer(file) {
+    return new Promise(function (resolve, reject) {
+      if (typeof file.arrayBuffer === "function") {
+        file.arrayBuffer().then(resolve).catch(function () {
+          fallbackReadBuffer(file, resolve, reject);
+        });
+      } else {
+        fallbackReadBuffer(file, resolve, reject);
+      }
+    });
+  }
+
+  function fallbackReadBuffer(file, resolve, reject) {
+    if (typeof FileReader === "undefined") {
+      reject(new Error("Браузер не поддерживает FileReader"));
+      return;
+    }
+    var reader = new FileReader();
+    reader.onload = function () { resolve(reader.result); };
+    reader.onerror = function () { reject(new Error("Не удалось прочитать файл")); };
+    reader.readAsArrayBuffer(file);
+  }
+
+  /* ============================================================
+     СБОР ФАЙЛОВ (из ZIP или из выбранных пользователем)
+     Каждый элемент: { name, path, type: 'json'|'html', getText: fn }
+     ============================================================ */
+
+  function extToType(nameLower) {
+    if (/\.json$/.test(nameLower)) { return "json"; }
+    if (/\.html?$/.test(nameLower)) { return "html"; }
+    return "other";
+  }
+
+  // Возвращает список файловых записей из ZIP-архива.
+  function collectFromZip(arrayBuffer) {
+    if (typeof JSZip === "undefined") {
+      return Promise.reject(new Error("JSZIP_MISSING"));
+    }
+    return JSZip.loadAsync(arrayBuffer).then(function (zip) {
+      var entries = [];
+      zip.forEach(function (relativePath, zipEntry) {
+        if (zipEntry.dir) { return; }
+        var nameLower = relativePath.toLowerCase();
+        var type = extToType(nameLower);
+        if (type === "other") { return; }
+        entries.push({
+          name: relativePath.split("/").pop(),
+          path: relativePath,
+          type: type,
+          getText: (function (entry) {
+            return function () { return entry.async("string"); };
+          })(zipEntry)
+        });
+      });
+      return entries;
+    }).catch(function (err) {
+      if (err && err.message === "JSZIP_MISSING") { throw err; }
+      throw new Error("ZIP_CORRUPT");
+    });
+  }
+
+  // Возвращает список файловых записей из выбранных пользователем файлов.
+  function collectFromFiles(fileList) {
+    var entries = [];
+    for (var i = 0; i < fileList.length; i++) {
+      var f = fileList[i];
+      var nameLower = f.name.toLowerCase();
+      var type = extToType(nameLower);
+      if (type === "other") { continue; }
+      entries.push({
+        name: f.name,
+        path: f.name,
+        type: type,
+        getText: (function (file) {
+          return function () { return readFileAsText(file); };
+        })(f)
+      });
+    }
+    return entries;
+  }
+
+  /* ============================================================
+     ОСНОВНАЯ ОБРАБОТКА
+     ============================================================ */
+
+  var diag = null; // объект диагностики текущей обработки
+
+  function resetDiagnostics() {
+    diag = {
+      allFiles: [],
+      followersFiles: [],
+      followingFiles: [],
+      skippedFiles: [],
+      counts: [],        // { path, type, category, count }
+      warnings: []
+    };
+  }
+
+  function handleInput(fileList) {
+    clearMessages();
+    resetDiagnostics();
+    showProcessing("Чтение файлов…");
+
+    var files = Array.prototype.slice.call(fileList);
+    if (!files.length) {
+      hideProcessing();
+      addMessage("error", "Файлы не выбраны. Пожалуйста, выберите ZIP-архив или файлы JSON/HTML.");
+      return;
+    }
+
+    // Определяем, есть ли среди выбранных ZIP-архив.
+    var zipFiles = files.filter(function (f) { return /\.zip$/i.test(f.name); });
+    var plainFiles = files.filter(function (f) { return !/\.zip$/i.test(f.name); });
+
+    var collectPromises = [];
+
+    zipFiles.forEach(function (zf) {
+      collectPromises.push(
+        readFileAsArrayBuffer(zf)
+          .then(function (buf) { return collectFromZip(buf); })
+      );
+    });
+
+    if (plainFiles.length) {
+      collectPromises.push(Promise.resolve(collectFromFiles(plainFiles)));
+    }
+
+    Promise.all(collectPromises).then(function (groups) {
+      var entries = [];
+      groups.forEach(function (g) { entries = entries.concat(g); });
+      return processEntries(entries);
+    }).catch(function (err) {
+      hideProcessing();
+      handleFatalError(err);
+    });
+  }
+
+  function handleFatalError(err) {
+    var msg = (err && err.message) ? err.message : String(err);
+    if (msg === "JSZIP_MISSING" || typeof JSZip === "undefined") {
+      addMessage("error",
+        "Не удалось загрузить библиотеку <code>jszip.min.js</code>. " +
+        "Убедитесь, что файл <code>jszip.min.js</code> находится в той же папке, что и <code>index.html</code>.");
+    } else if (msg === "ZIP_CORRUPT") {
+      addMessage("error",
+        "ZIP-архив повреждён или имеет неподдерживаемый формат. " +
+        "Попробуйте заново скачать архив данных из Instagram.");
+    } else {
+      addMessage("error", "Произошла ошибка при обработке: " + escapeHtml(msg));
+    }
+    el.resetRow.classList.remove("hidden");
+  }
+
+  function processEntries(entries) {
+    if (!entries || !entries.length) {
+      hideProcessing();
+      addMessage("error",
+        "В выбранных данных не найдено файлов JSON или HTML. " +
+        "Убедитесь, что вы загрузили ZIP-архив Instagram или файлы со списками подписчиков и подписок.");
+      el.resetRow.classList.remove("hidden");
+      return;
+    }
+
+    entries.forEach(function (e) { diag.allFiles.push(e.path); });
+
+    // Обрабатываем каждый файл последовательно (через цепочку промисов),
+    // чтобы не блокировать интерфейс на больших объёмах.
+    var followersAcc = [];
+    var followingAcc = [];
+
+    var chain = Promise.resolve();
+
+    entries.forEach(function (entry) {
+      chain = chain.then(function () {
+        showProcessing("Разбор файла: " + entry.name);
+        return entry.getText().then(function (text) {
+          classifyAndExtract(entry, text, followersAcc, followingAcc);
+        }).catch(function (err) {
+          diag.skippedFiles.push(entry.path + " (ошибка чтения)");
+          diag.warnings.push("Не удалось прочитать файл «" + entry.path + "».");
+        });
+      });
+    });
+
+    chain.then(function () {
+      finalize(followersAcc, followingAcc);
+    }).catch(function (err) {
+      hideProcessing();
+      handleFatalError(err);
+    });
+  }
+
+  function classifyAndExtract(entry, text, followersAcc, followingAcc) {
+    var pathLower = entry.path.toLowerCase();
+    var category = classifyByName(pathLower);
+
+    // Извлекаем имена в зависимости от типа файла.
+    var usernames = [];
+    var parseError = null;
+    try {
+      if (entry.type === "json") {
+        usernames = parseJsonUsernames(text);
+        if (category === "unknown") {
+          category = classifyJsonByContent(text);
+        }
+      } else if (entry.type === "html") {
+        usernames = parseHtmlUsernames(text);
+      }
+    } catch (e) {
+      parseError = e;
+    }
+
+    if (parseError) {
+      diag.skippedFiles.push(entry.path + " (" + parseError.message + ")");
+      diag.warnings.push("Файл «" + entry.path + "» имеет неправильную структуру и был пропущен (" + parseError.message + ").");
+      return;
+    }
+
+    // Если по имени/содержимому не определилось, но имена найдены —
+    // пытаемся угадать по имени файла ещё раз мягко, иначе пропускаем как неизвестный.
+    if (category === "unknown") {
+      // Файлы вида "followers*" уже пойманы; здесь остаются действительно неизвестные.
+      diag.skippedFiles.push(entry.path + " (тип не распознан)");
+      if (usernames.length) {
+        diag.warnings.push("Файл «" + entry.path + "» содержит " + usernames.length +
+          " записей, но не распознан как подписчики или подписки — он не учтён.");
+      }
+      return;
+    }
+
+    if (!usernames.length) {
+      diag.skippedFiles.push(entry.path + " (нет данных)");
+      diag.warnings.push("В файле «" + entry.path + "» не найдено имён пользователей.");
+      return;
+    }
+
+    if (category === "followers") {
+      diag.followersFiles.push(entry.path);
+      for (var i = 0; i < usernames.length; i++) { followersAcc.push(usernames[i]); }
+    } else if (category === "following") {
+      diag.followingFiles.push(entry.path);
+      for (var j = 0; j < usernames.length; j++) { followingAcc.push(usernames[j]); }
+    }
+
+    diag.counts.push({
+      path: entry.path,
+      type: entry.type,
+      category: category,
+      count: usernames.length
+    });
+  }
+
+  function finalize(followersAcc, followingAcc) {
+    var followers = dedupe(followersAcc);
+    var following = dedupe(followingAcc);
+
+    hideProcessing();
+    clearMessages();
+
+    var hasFollowers = followers.length > 0;
+    var hasFollowing = following.length > 0;
+
+    if (!hasFollowers && !hasFollowing) {
+      addMessage("error",
+        "Не удалось найти ни списки подписчиков, ни списки подписок. " +
+        "Проверьте, что загружены правильные файлы Instagram (followers / following). " +
+        "Откройте «Подробности обработки» для диагностики.");
+      renderDiagnostics();
+      el.diagCard.classList.remove("hidden");
+      el.resetRow.classList.remove("hidden");
+      return;
+    }
+
+    if (!hasFollowers) {
+      addMessage("warning",
+        "Найден только список подписок. Список подписчиков не обнаружен — " +
+        "будут показаны только доступные данные (вкладка «Подписки»).");
+      diag.warnings.push("Список подписчиков не найден.");
+    }
+    if (!hasFollowing) {
+      addMessage("warning",
+        "Найден только список подписчиков. Список подписок не обнаружен — " +
+        "будут показаны только доступные данные (вкладка «Подписчики»).");
+      diag.warnings.push("Список подписок не найден.");
+    }
+
+    // Сравнение с помощью Set.
+    var followerSet = new Set(followers);
+    var followingSet = new Set(following);
+
+    var notFollowingBack = [];   // following - followers (я подписан, они нет)
+    var iDontFollow = [];        // followers - following (они подписаны, я нет)
+    var mutual = [];             // пересечение
+
+    for (var i = 0; i < following.length; i++) {
+      if (!followerSet.has(following[i])) {
+        notFollowingBack.push(following[i]);
+      } else {
+        mutual.push(following[i]);
+      }
+    }
+    for (var j = 0; j < followers.length; j++) {
+      if (!followingSet.has(followers[j])) {
+        iDontFollow.push(followers[j]);
+      }
+    }
+
+    state.followers = followers;
+    state.following = following;
+    state.categories = {
+      not_following_back: notFollowingBack,
+      i_dont_follow: iDontFollow,
+      mutual: mutual,
+      followers: followers.slice(),
+      following: following.slice()
+    };
+
+    renderStats();
+    renderTabs();
+    renderDiagnostics();
+
+    el.diagCard.classList.remove("hidden");
+    el.statsCard.classList.remove("hidden");
+    el.resultsCard.classList.remove("hidden");
+    el.resetRow.classList.remove("hidden");
+
+    // Выбор стартовой вкладки: первая непустая среди приоритетных.
+    var startTab = "not_following_back";
+    if (!notFollowingBack.length && !hasFollowing) { startTab = "followers"; }
+    setActiveTab(startTab);
+
+    if (hasFollowers && hasFollowing) {
+      addMessage("info",
+        "Готово! Обработано подписчиков: <strong>" + followers.length +
+        "</strong>, подписок: <strong>" + following.length + "</strong>.");
+    }
+  }
+
+  /* ============================================================
+     ОТРИСОВКА СТАТИСТИКИ
+     ============================================================ */
+  function renderStats() {
+    var c = state.categories;
+    var items = [
+      { num: state.followers.length, label: "Подписчиков", cls: "" },
+      { num: state.following.length, label: "Подписок", cls: "" },
+      { num: c.mutual.length, label: "Взаимных", cls: "success" },
+      { num: c.not_following_back.length, label: "Не подписаны на меня", cls: "danger" },
+      { num: c.i_dont_follow.length, label: "Я не подписан", cls: "warning" }
+    ];
+    el.statsGrid.innerHTML = "";
+    var frag = document.createDocumentFragment();
+    items.forEach(function (it) {
+      var d = document.createElement("div");
+      d.className = "stat " + it.cls;
+      var n = document.createElement("div");
+      n.className = "stat-num";
+      n.textContent = String(it.num);
+      var l = document.createElement("div");
+      l.className = "stat-label";
+      l.textContent = it.label;
+      d.appendChild(n);
+      d.appendChild(l);
+      frag.appendChild(d);
+    });
+    el.statsGrid.appendChild(frag);
+  }
+
+  /* ============================================================
+     ВКЛАДКИ
+     ============================================================ */
+  function renderTabs() {
+    el.tabs.innerHTML = "";
+    var frag = document.createDocumentFragment();
+    TAB_DEFS.forEach(function (def) {
+      var btn = document.createElement("button");
+      btn.className = "tab";
+      btn.type = "button";
+      btn.setAttribute("data-tab", def.key);
+      var count = state.categories[def.key].length;
+      btn.innerHTML = escapeHtml(def.label) + '<span class="count">' + count + '</span>';
+      btn.addEventListener("click", function () { setActiveTab(def.key); });
+      frag.appendChild(btn);
+    });
+    el.tabs.appendChild(frag);
+  }
+
+  function setActiveTab(key) {
+    state.activeTab = key;
+    state.searchQuery = "";
+    state.renderLimit = PAGE_SIZE;
+    el.searchInput.value = "";
+
+    var tabButtons = el.tabs.querySelectorAll(".tab");
+    for (var i = 0; i < tabButtons.length; i++) {
+      if (tabButtons[i].getAttribute("data-tab") === key) {
+        tabButtons[i].classList.add("active");
+      } else {
+        tabButtons[i].classList.remove("active");
+      }
+    }
+    rebuildFiltered();
+    renderList();
+  }
+
+  /* ============================================================
+     ФИЛЬТРАЦИЯ, СОРТИРОВКА, ОТРИСОВКА СПИСКА
+     ============================================================ */
+  function rebuildFiltered() {
+    var base = state.categories[state.activeTab] || [];
+    var q = state.searchQuery.trim().toLowerCase();
+    var result;
+    if (q) {
+      result = base.filter(function (u) { return u.indexOf(q) !== -1; });
+    } else {
+      result = base.slice();
+    }
+    result.sort(function (a, b) {
+      if (a < b) { return state.sortAsc ? -1 : 1; }
+      if (a > b) { return state.sortAsc ? 1 : -1; }
+      return 0;
+    });
+    state.filtered = result;
+  }
+
+  function renderList() {
+    var list = state.filtered;
+    var total = list.length;
+    var limit = Math.min(state.renderLimit, total);
+
+    // Метаданные списка
+    var def = null;
+    for (var t = 0; t < TAB_DEFS.length; t++) {
+      if (TAB_DEFS[t].key === state.activeTab) { def = TAB_DEFS[t]; break; }
+    }
+    var label = def ? def.label : "";
+    el.listMeta.textContent = "«" + label + "»: показано " + limit + " из " + total +
+      (state.searchQuery ? " (по запросу «" + state.searchQuery + "»)" : "") + ".";
+
+    el.userList.innerHTML = "";
+
+    if (total === 0) {
+      var empty = document.createElement("li");
+      empty.className = "empty-list";
+      empty.textContent = state.searchQuery
+        ? "Ничего не найдено по вашему запросу."
+        : "В этой категории нет аккаунтов.";
+      el.userList.appendChild(empty);
+      el.showMoreWrap.classList.add("hidden");
+      return;
+    }
+
+    var frag = document.createDocumentFragment();
+    for (var i = 0; i < limit; i++) {
+      frag.appendChild(buildUserItem(list[i], i + 1));
+    }
+    el.userList.appendChild(frag);
+
+    if (limit < total) {
+      el.showMoreBtn.textContent = "Показать ещё (" + (total - limit) + ")";
+      el.showMoreWrap.classList.remove("hidden");
+    } else {
+      el.showMoreWrap.classList.add("hidden");
+    }
+  }
+
+  function buildUserItem(username, index) {
+    var li = document.createElement("li");
+    li.className = "user-item";
+
+    var idx = document.createElement("span");
+    idx.className = "user-index";
+    idx.textContent = String(index);
+
+    var name = document.createElement("span");
+    name.className = "user-name";
+    name.textContent = username;
+
+    var actions = document.createElement("span");
+    actions.className = "user-actions";
+
+    var profileUrl = "https://www.instagram.com/" + encodeURIComponent(username) + "/";
+
+    var open = document.createElement("a");
+    open.className = "icon-btn";
+    open.href = profileUrl;
+    open.target = "_blank";
+    open.rel = "noopener noreferrer";
+    open.textContent = "Открыть";
+    open.title = "Открыть профиль в Instagram";
+
+    var copy = document.createElement("button");
+    copy.className = "icon-btn";
+    copy.type = "button";
+    copy.textContent = "Копировать";
+    copy.title = "Копировать имя пользователя";
+    copy.addEventListener("click", function () {
+      copyText(username).then(function () {
+        showToast("Скопировано: " + username);
+      });
+    });
+
+    actions.appendChild(open);
+    actions.appendChild(copy);
+
+    li.appendChild(idx);
+    li.appendChild(name);
+    li.appendChild(actions);
+    return li;
+  }
+
+  /* ---------- Поиск с защитой от зависания ---------- */
+  var searchTimer = null;
+  function onSearchInput() {
+    if (searchTimer) { clearTimeout(searchTimer); }
+    searchTimer = setTimeout(function () {
+      state.searchQuery = el.searchInput.value || "";
+      state.renderLimit = PAGE_SIZE;
+      rebuildFiltered();
+      renderList();
+    }, 120);
+  }
+
+  function toggleSort() {
+    state.sortAsc = !state.sortAsc;
+    el.sortBtn.textContent = state.sortAsc ? "↕️ Сортировка: А→Я" : "↕️ Сортировка: Я→А";
+    state.renderLimit = PAGE_SIZE;
+    rebuildFiltered();
+    renderList();
+  }
+
+  function showMore() {
+    state.renderLimit += PAGE_SIZE;
+    renderList();
+  }
+
+  /* ============================================================
+     ДИАГНОСТИКА
+     ============================================================ */
+  function renderDiagnostics() {
+    if (!diag) { return; }
+    var html = "";
+
+    html += "<h4>Найденные файлы (" + diag.allFiles.length + ")</h4>";
+    html += listToHtml(diag.allFiles);
+
+    html += "<h4>Распознаны как подписчики (" + diag.followersFiles.length + ")</h4>";
+    html += listToHtml(diag.followersFiles);
+
+    html += "<h4>Распознаны как подписки (" + diag.followingFiles.length + ")</h4>";
+    html += listToHtml(diag.followingFiles);
+
+    html += "<h4>Извлечено пользователей по файлам</h4>";
+    if (diag.counts.length) {
+      html += "<ul>";
+      diag.counts.forEach(function (c) {
+        var catRu = c.category === "followers" ? "подписчики" :
+                    (c.category === "following" ? "подписки" : c.category);
+        html += "<li><code>" + escapeHtml(c.path) + "</code> — " +
+                escapeHtml(catRu) + ": <strong>" + c.count + "</strong></li>";
+      });
+      html += "</ul>";
+    } else {
+      html += "<ul><li>—</li></ul>";
+    }
+
+    html += "<h4>Пропущенные файлы (" + diag.skippedFiles.length + ")</h4>";
+    html += listToHtml(diag.skippedFiles);
+
+    html += "<h4>Предупреждения (" + diag.warnings.length + ")</h4>";
+    html += listToHtml(diag.warnings);
+
+    el.diagBody.innerHTML = html;
+  }
+
+  function listToHtml(arr) {
+    if (!arr || !arr.length) { return "<ul><li>—</li></ul>"; }
+    var html = "<ul>";
+    for (var i = 0; i < arr.length; i++) {
+      html += "<li><code>" + escapeHtml(arr[i]) + "</code></li>";
+    }
+    html += "</ul>";
+    return html;
+  }
+
+  /* ============================================================
+     КОПИРОВАНИЕ И ЭКСПОРТ
+     ============================================================ */
+  function copyText(text) {
+    return new Promise(function (resolve) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () {
+          resolve(true);
+        }).catch(function () {
+          fallbackCopy(text);
+          resolve(true);
+        });
+      } else {
+        fallbackCopy(text);
+        resolve(true);
+      }
+    });
+  }
+
+  function fallbackCopy(text) {
+    try {
+      var ta = document.createElement("textarea");
+      ta.value = text;
+      ta.setAttribute("readonly", "");
+      ta.style.position = "absolute";
+      ta.style.left = "-9999px";
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+    } catch (e) { /* ничего не делаем */ }
+  }
+
+  function copyCurrentList() {
+    var list = state.filtered;
+    if (!list.length) {
+      showToast("Список пуст");
+      return;
+    }
+    copyText(list.join("\n")).then(function () {
+      showToast("Скопировано имён: " + list.length);
+    });
+  }
+
+  // Экранирование значения для CSV.
+  function csvCell(value) {
+    var s = String(value === null || value === undefined ? "" : value);
+    if (/[",\n\r]/.test(s)) {
+      s = '"' + s.replace(/"/g, '""') + '"';
+    }
+    return s;
+  }
+
+  function buildCsv(rows) {
+    var lines = [];
+    lines.push("category,username,profile_url");
+    for (var i = 0; i < rows.length; i++) {
+      var r = rows[i];
+      lines.push(csvCell(r.category) + "," + csvCell(r.username) + "," + csvCell(r.url));
+    }
+    // UTF-8 BOM для корректного открытия в Excel.
+    return "﻿" + lines.join("\r\n") + "\r\n";
+  }
+
+  function rowsForCategory(catKey) {
+    var list = state.categories[catKey] || [];
+    var csvName = CATEGORY_CSV_NAME[catKey];
+    var rows = [];
+    for (var i = 0; i < list.length; i++) {
+      rows.push({
+        category: csvName,
+        username: list[i],
+        url: "https://www.instagram.com/" + list[i] + "/"
+      });
+    }
+    return rows;
+  }
+
+  function downloadCsv(filename, csvText) {
+    try {
+      var blob = new Blob([csvText], { type: "text/csv;charset=utf-8;" });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(function () { URL.revokeObjectURL(url); }, 1500);
+    } catch (e) {
+      showToast("Не удалось сохранить файл");
+    }
+  }
+
+  function exportCurrentList() {
+    var catKey = state.activeTab;
+    var rows = rowsForCategory(catKey);
+    if (!rows.length) {
+      showToast("Список пуст");
+      return;
+    }
+    var csv = buildCsv(rows);
+    downloadCsv("instagram_" + CATEGORY_CSV_NAME[catKey] + ".csv", csv);
+    showToast("CSV сохранён");
+  }
+
+  function exportAll() {
+    var order = ["not_following_back", "i_dont_follow", "mutual", "followers", "following"];
+    var rows = [];
+    order.forEach(function (catKey) {
+      rows = rows.concat(rowsForCategory(catKey));
+    });
+    if (!rows.length) {
+      showToast("Нет данных для экспорта");
+      return;
+    }
+    var csv = buildCsv(rows);
+    downloadCsv("instagram_all_results.csv", csv);
+    showToast("Полный CSV сохранён");
+  }
+
+  /* ============================================================
+     СБРОС
+     ============================================================ */
+  function resetApp() {
+    state.followers = [];
+    state.following = [];
+    state.categories = {
+      not_following_back: [], i_dont_follow: [], mutual: [], followers: [], following: []
+    };
+    state.activeTab = "not_following_back";
+    state.searchQuery = "";
+    state.renderLimit = PAGE_SIZE;
+    state.filtered = [];
+    diag = null;
+
+    el.fileInput.value = "";
+    clearMessages();
+    hideProcessing();
+    el.userList.innerHTML = "";
+    el.statsGrid.innerHTML = "";
+    el.tabs.innerHTML = "";
+    el.diagBody.innerHTML = "";
+    el.searchInput.value = "";
+
+    el.diagCard.classList.add("hidden");
+    el.statsCard.classList.add("hidden");
+    el.resultsCard.classList.add("hidden");
+    el.resetRow.classList.add("hidden");
+    el.showMoreWrap.classList.add("hidden");
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  /* ============================================================
+     ВСПОМОГАТЕЛЬНОЕ
+     ============================================================ */
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+
+  function checkBrowserSupport() {
+    var missing = [];
+    if (typeof Promise === "undefined") { missing.push("Promise"); }
+    if (typeof FileReader === "undefined") { missing.push("FileReader"); }
+    if (typeof Set === "undefined") { missing.push("Set"); }
+    if (typeof DOMParser === "undefined") { missing.push("DOMParser"); }
+    if (missing.length) {
+      addMessage("error",
+        "Ваш браузер не поддерживает необходимые функции: " + missing.join(", ") +
+        ". Пожалуйста, обновите браузер.");
+      return false;
+    }
+    return true;
+  }
+
+  /* ============================================================
+     ПРИВЯЗКА СОБЫТИЙ
+     ============================================================ */
+  function bindEvents() {
+    el.themeToggle.addEventListener("click", toggleTheme);
+
+    el.pickBtn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      el.fileInput.click();
+    });
+
+    el.dropzone.addEventListener("click", function () {
+      el.fileInput.click();
+    });
+    el.dropzone.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        el.fileInput.click();
+      }
+    });
+
+    el.fileInput.addEventListener("change", function () {
+      if (el.fileInput.files && el.fileInput.files.length) {
+        handleInput(el.fileInput.files);
+      }
+    });
+
+    // Drag & Drop
+    ["dragenter", "dragover"].forEach(function (evt) {
+      el.dropzone.addEventListener(evt, function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        el.dropzone.classList.add("dragover");
+      });
+    });
+    ["dragleave", "dragend"].forEach(function (evt) {
+      el.dropzone.addEventListener(evt, function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        el.dropzone.classList.remove("dragover");
+      });
+    });
+    el.dropzone.addEventListener("drop", function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      el.dropzone.classList.remove("dragover");
+      if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length) {
+        handleInput(e.dataTransfer.files);
+      }
+    });
+    // Предотвращаем открытие файла браузером при промахе мимо зоны.
+    window.addEventListener("dragover", function (e) { e.preventDefault(); });
+    window.addEventListener("drop", function (e) { e.preventDefault(); });
+
+    el.resetBtn.addEventListener("click", resetApp);
+    el.searchInput.addEventListener("input", onSearchInput);
+    el.sortBtn.addEventListener("click", toggleSort);
+    el.showMoreBtn.addEventListener("click", showMore);
+    el.copyListBtn.addEventListener("click", copyCurrentList);
+    el.exportListBtn.addEventListener("click", exportCurrentList);
+    el.exportAllBtn.addEventListener("click", exportAll);
+  }
+
+  /* ============================================================
+     ИНИЦИАЛИЗАЦИЯ
+     ============================================================ */
+  function init() {
+    applyStoredTheme();
+    bindEvents();
+    checkBrowserSupport();
+
+    if (typeof JSZip === "undefined") {
+      addMessage("warning",
+        "Библиотека <code>jszip.min.js</code> не загружена. Чтение ZIP-архивов будет недоступно, " +
+        "но вы всё равно можете выбрать отдельные файлы JSON или HTML. " +
+        "Поместите файл <code>jszip.min.js</code> рядом с <code>index.html</code>.");
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+
+})();
+</script>
+</body>
+</html>
