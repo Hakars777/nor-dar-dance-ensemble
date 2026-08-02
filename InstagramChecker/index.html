@@ -700,8 +700,12 @@
     "developers": true, "legal": true, "directory": true, "web": true,
     "tv": true, "igtv": true, "help": true, "privacy": true, "terms": true,
     "login": true, "emails": true, "session": true, "challenge": true,
-    "direct": true, "ajax": true, "graphql": true, "api": true
+    "direct": true, "ajax": true, "graphql": true, "api": true,
+    "_u": true, "_n": true
   };
+
+  // Служебные сегменты-редиректы Instagram в начале пути (deep-link ссылки).
+  var IG_REDIRECT_SEGMENTS = { "_u": true, "_n": true };
 
   // Извлекает username из значения (может быть ссылкой Instagram или именем).
   function extractUsername(raw) {
@@ -709,7 +713,7 @@
     var value = String(raw).trim();
     if (!value) { return ""; }
 
-    // Если это ссылка на instagram — вытащить первый сегмент пути.
+    // Если это ссылка на instagram — вытащить имя пользователя из пути.
     if (/instagram\.com/i.test(value)) {
       var cleaned = value.replace(/^https?:\/\//i, "");
       // убрать домен
@@ -718,8 +722,17 @@
       var path = cleaned.substring(pathStart + 1);
       // убрать query и hash
       path = path.split("?")[0].split("#")[0];
-      // первый сегмент
-      var seg = path.split("/")[0];
+      var segs = path.split("/").filter(function (s) { return s.length > 0; });
+      // Instagram использует редирект-ссылки вида /_u/username и /_n/username —
+      // в этом случае имя пользователя находится во втором сегменте.
+      var seg = "";
+      if (segs.length) {
+        if (IG_REDIRECT_SEGMENTS[segs[0]] === true && segs.length > 1) {
+          seg = segs[1];
+        } else {
+          seg = segs[0];
+        }
+      }
       value = seg;
     } else {
       // Может быть просто ссылка без протокола, содержащая слэши.
@@ -811,13 +824,14 @@
     // Случай 1: объект с string_list_data (стандартный элемент подписки/подписчика)
     if (Object.prototype.hasOwnProperty.call(node, "string_list_data") &&
         Array.isArray(node.string_list_data)) {
-      var got = "";
+      var pushedAny = false;
       for (var s = 0; s < node.string_list_data.length; s++) {
-        got = usernameFromStringListItem(node.string_list_data[s]);
-        if (got) { out.push(got); }
+        var got = usernameFromStringListItem(node.string_list_data[s]);
+        if (got) { out.push(got); pushedAny = true; }
       }
-      // Если внутри string_list_data ничего не нашли — пробуем title самого узла.
-      if (!got && typeof node.title === "string" && node.title.trim()) {
+      // Если внутри string_list_data имя не извлеклось (например, ссылка вида
+      // /_u/ без поля value) — берём имя пользователя из title самого узла.
+      if (!pushedAny && typeof node.title === "string" && node.title.trim()) {
         var ut = extractUsername(node.title) || normalizeUsername(node.title);
         if (ut) { out.push(ut); }
       }
@@ -885,26 +899,32 @@
      ============================================================ */
 
   // Возвращает "followers", "following" или "unknown" по имени файла.
+  // Классификация строгая, чтобы не спутать список подписок с похожими файлами
+  // Instagram (following_hashtags, pending_follow_requests, recently_unfollowed и т.п.).
   function classifyByName(pathLower) {
     var base = pathLower.split("/").pop();
 
-    // Явные подписки
-    if (/following/.test(base)) { return "following"; }
-    if (/follow_requests_sent/.test(base)) { return "unknown"; }
+    // Список подписок: строго following.json / following_1.json / following.html
+    // (но НЕ following_hashtags и другие производные названия).
+    if (/^following(_\d+)?\.(json|html?)$/.test(base)) { return "following"; }
 
-    // Явные подписчики (followers_1, followers, follower)
-    if (/followers?_?\d*/.test(base) || /followers/.test(base)) { return "followers"; }
-    if (/follower/.test(base)) { return "followers"; }
+    // Список подписчиков: followers.json, followers_1.json, follower.json,
+    // а также соответствующие HTML-файлы.
+    if (/^followers?(_\d+)?\.(json|html?)$/.test(base)) { return "followers"; }
 
     return "unknown";
   }
 
   // Пытается определить тип по содержимому JSON (ключи структуры).
+  // Нужна для файлов с нестандартными именами.
   function classifyJsonByContent(text) {
-    // Быстрая проверка по характерным ключам без полного анализа.
-    if (/relationships_following/.test(text)) { return "following"; }
+    // Хэштеги, на которые вы подписаны — это НЕ список подписок на аккаунты.
+    if (/relationships_following_hashtags/.test(text)) { return "unknown"; }
+    // Прочие «follow_requests», «unfollowed» и т.п. не считаем подписками/подписчиками.
+    if (/relationships_follow_requests/.test(text)) { return "unknown"; }
+    if (/relationships_unfollowed/.test(text)) { return "unknown"; }
+    if (/relationships_following\b/.test(text)) { return "following"; }
     if (/relationships_followers/.test(text)) { return "followers"; }
-    if (/"following"\s*:/.test(text) && !/followers/.test(text)) { return "following"; }
     return "unknown";
   }
 
